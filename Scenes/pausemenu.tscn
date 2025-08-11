@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://bk6kadoji6ea7"]
+
+[ext_resource type="Script" uid="uid://bfyqg4rhnt76q" path="res://scripts/playground/pause_menu.gd" id="1_3otxd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3otxd"]
+bg_color = Color(1, 0.721569, 0.270588, 0.435294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r33we"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ljkb"]
+bg_color = Color(1, 0.709804, 0, 0.443137)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vpyy4"]
+bg_color = Color(1, 0.74902, 0, 0)
+
+[node name="pausemenu" type="CanvasLayer"]
+script = ExtResource("1_3otxd")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="Control/VBoxContainer"]
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/hover = SubResource("StyleBoxFlat_3otxd")
+theme_override_styles/normal = SubResource("StyleBoxFlat_r33we")
+action_mode = 0
+text = "Resume
+"
+
+[node name="Button2" type="Button" parent="Control/VBoxContainer"]
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ljkb")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vpyy4")
+action_mode = 0
+text = "Main Menu
+"
+
+[connection signal="pressed" from="Control/VBoxContainer/Button" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/Button2" to="." method="_on_main_menu_pressed"]
