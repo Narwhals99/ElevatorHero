@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=15 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://w0pbd0jgjbho" path="res://assets/tilesets/buildingplayground/Buildings - High Lights 1.png" id="2_mm0a5"]
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
 [ext_resource type="PackedScene" uid="uid://bk6kadoji6ea7" path="res://scenes/pausemenu.tscn" id="6_o6wi6"]
+[ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scripts/playground/playground_npc.tscn" id="8_mrac1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qchbg"]
 texture = ExtResource("2_kddj0")
@@ -1605,9 +1606,10 @@ physics_layer_0/collision_layer = 17
 sources/0 = SubResource("TileSetAtlasSource_q8s1k")
 
 [node name="playground" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_emj6c")
 
-[node name="elevatorhero2" parent="." instance=ExtResource("1_qchbg")]
+[node name="elevatorhero_2" parent="." instance=ExtResource("1_qchbg")]
 
 [node name="Node2D" type="Node2D" parent="."]
 
@@ -1654,3 +1656,6 @@ motion_scale = Vector2(-0.1, -0.1)
 texture = ExtResource("2_mm0a5")
 
 [node name="pausemenu" parent="." instance=ExtResource("6_o6wi6")]
+
+[node name="playground_npc" parent="." instance=ExtResource("8_mrac1")]
+position = Vector2(168, 22)

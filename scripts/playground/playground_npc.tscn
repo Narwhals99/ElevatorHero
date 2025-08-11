@@ -1,0 +1,105 @@
+[gd_scene load_steps=14 format=3 uid="uid://dlqyq6ck2ob7"]
+
+[ext_resource type="Script" uid="uid://ca3svxw8htgrd" path="res://scripts/playground/playground_npc.gd" id="1_0mfvt"]
+[ext_resource type="Texture2D" uid="uid://cnyjj712jqpvc" path="res://assets/sprites/elevatorhero1/guyidle-Sheet.png" id="1_t3tq6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0mfvt"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(0, 0, 53, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ibju7"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(53, 0, 53, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ennjy"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(106, 0, 53, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gmyeo"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(159, 0, 53, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1kq42"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(212, 0, 53, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7ae0"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(265, 0, 53, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hpiaj"]
+atlas = ExtResource("1_t3tq6")
+region = Rect2(318, 0, 53, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5gw0r"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0mfvt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ibju7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ennjy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gmyeo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1kq42")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u7ae0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hpiaj")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hww67"]
+size = Vector2(12, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wyavw"]
+size = Vector2(19, 32)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0mfvt"]
+font_size = 8
+
+[node name="playground_npc" type="CharacterBody2D"]
+z_index = -1
+script = ExtResource("1_0mfvt")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_5gw0r")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(11, -5)
+shape = SubResource("RectangleShape2D_hww67")
+
+[node name="talk_area" type="Area2D" parent="."]
+z_index = -2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="talk_area"]
+position = Vector2(10.5, 1)
+shape = SubResource("RectangleShape2D_wyavw")
+
+[node name="talk_hint" type="Label" parent="."]
+visible = false
+offset_left = -2.0
+offset_top = -26.0
+offset_right = 71.0
+offset_bottom = -3.0
+text = "E - Talk"
+label_settings = SubResource("LabelSettings_0mfvt")
+metadata/_edit_use_anchors_ = true
