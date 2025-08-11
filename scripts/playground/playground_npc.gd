@@ -37,5 +37,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			talk_hint.visible = false
 		_start_conversation()
 
-func _start_conversation() -> void:
-	print("Talk to NPC")  # Replace with dialogue UI logic
+func _start_conversation():
+	var db = get_tree().current_scene.get_node("dialoguebox") # adjust path if named differently
+	db.start_dialogue("res://dialogues/chilis_npc.json")        # later swap to your Chili's file

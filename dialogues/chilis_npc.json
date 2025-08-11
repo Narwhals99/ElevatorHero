@@ -1,0 +1,44 @@
+{
+  "Start": {
+	"text": "Howdy Elevator Hero! Mighty fine weather we're having wouldn't you say?",
+	"choices": [
+	  { "text": "No the weather sucks", "next": "MAD" },
+	  { "text": "Yes it is great isn't it?", "next": "Happy" }
+	]
+  },
+  "MAD": {
+	"text": "Whoah there, pal. I don't like a negative nancy.",
+	"choices": [
+	  { "text": "Why did you call me Elevator Hero?", "next": "Why" },
+	  { "text": "Bye", "next": "Bye" }
+	]
+  },
+  "Happy": {
+	"text": "It really, really, is.",
+	"choices": [
+	  { "text": "Why did you call me Elevator Hero?", "next": "Why" },
+	  { "text": "Bye", "next": "Bye" }
+	]
+  },
+  "Bye": {
+	"text": "Alrighty, then. I'll see you on the flippity!",
+	"choices": []
+  },
+  "Why": {
+	"text": "Isn't it obvious? You're the only one can stop those corporate zombies back there. Low wages, suits, corporate greed, slave labor in the Philippines? And don't get me started on the mandatory team builders at Chilis.",
+	"choices": [
+	  { "text": "What's wrong with Chilis?", "next": "Chilis" },
+	  { "text": "How am I supposed to stop them?", "next": "Quest" }
+	]
+  },
+  "Chilis": {
+	"text": "Let's just say 'bottomless chips and salsa' is more of a colloquial phrase than a good faith guarantee.",
+	"choices": [
+	  { "text": "How am I supposed to stop the corporate zombies?", "next": "Quest" }
+	]
+  },
+  "Quest": {
+	"text": "Well, kill them, of course! Go on in there and paint every right corner in that conference room with some Dolce & Gabbana! Kill kill kill!",
+	"choices": []
+  }
+}

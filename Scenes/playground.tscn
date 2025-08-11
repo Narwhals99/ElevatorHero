@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=16 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
 [ext_resource type="PackedScene" uid="uid://bk6kadoji6ea7" path="res://scenes/pausemenu.tscn" id="6_o6wi6"]
 [ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scripts/playground/playground_npc.tscn" id="8_mrac1"]
+[ext_resource type="PackedScene" uid="uid://blrrni2w5qcun" path="res://scenes/dialoguebox.tscn" id="9_2q4k0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qchbg"]
 texture = ExtResource("2_kddj0")
@@ -1648,7 +1649,7 @@ motion_scale = Vector2(0, 0)
 texture = ExtResource("1_q8s1k")
 
 [node name="buildings" type="ParallaxLayer" parent="ParallaxBackground"]
-position = Vector2(187, 126)
+position = Vector2(194, 142)
 scale = Vector2(2.11428, 3.29282)
 motion_scale = Vector2(-0.1, -0.1)
 
@@ -1659,3 +1660,5 @@ texture = ExtResource("2_mm0a5")
 
 [node name="playground_npc" parent="." instance=ExtResource("8_mrac1")]
 position = Vector2(168, 22)
+
+[node name="dialoguebox" parent="." instance=ExtResource("9_2q4k0")]
