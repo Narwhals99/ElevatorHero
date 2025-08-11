@@ -1,8 +1,8 @@
 [gd_scene load_steps=30 format=3 uid="uid://dx7s3i73fqpmi"]
 
-[ext_resource type="Texture2D" uid="uid://cnyjj712jqpvc" path="res://assets/sprites/guyidle-Sheet.png" id="1_3vyb7"]
+[ext_resource type="Texture2D" uid="uid://cnyjj712jqpvc" path="res://assets/sprites/elevatorhero1/guyidle-Sheet.png" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://d4hwscn2q5xs6" path="res://scripts/player.gd" id="1_g2els"]
-[ext_resource type="Texture2D" uid="uid://dfpxqu28pvoqt" path="res://assets/sprites/guywalk-Sheet.png" id="3_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://dfpxqu28pvoqt" path="res://assets/sprites/elevatorhero1/guywalk-Sheet.png" id="3_qhqgy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
 atlas = ExtResource("1_3vyb7")

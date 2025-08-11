@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l525motv7tys"
-path="res://.godot/imported/guyspattk-Sheet.png-57541240f2eb5dac931717ebe4a4e309.ctex"
+uid="uid://bb4ku36i3wpgr"
+path="res://.godot/imported/guybrowsing-Sheet.png-18b01067ed3cf6d12435aaab4ea92c97.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/guyspattk-Sheet.png"
-dest_files=["res://.godot/imported/guyspattk-Sheet.png-57541240f2eb5dac931717ebe4a4e309.ctex"]
+source_file="res://assets/sprites/elevatorhero1/guybrowsing-Sheet.png"
+dest_files=["res://.godot/imported/guybrowsing-Sheet.png-18b01067ed3cf6d12435aaab4ea92c97.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d3jtyi8nnmn5u"
-path="res://.godot/imported/guy-Sheet.png-9c25e990ebabff57cf1698a50a34d432.ctex"
+uid="uid://mra3k3807tlr"
+path="res://.godot/imported/Office Tileset All 32x32.png-c4d3c1d4b0a6bdb485ce16fb101397da.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/guy-Sheet.png"
-dest_files=["res://.godot/imported/guy-Sheet.png-9c25e990ebabff57cf1698a50a34d432.ctex"]
+source_file="res://assets/tilesets/buildingplayground/Office Tileset All 32x32.png"
+dest_files=["res://.godot/imported/Office Tileset All 32x32.png-c4d3c1d4b0a6bdb485ce16fb101397da.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfpxqu28pvoqt"
-path="res://.godot/imported/guywalk-Sheet.png-0ee30b26d6cedf294edd6801a23f8cc1.ctex"
+uid="uid://l525motv7tys"
+path="res://.godot/imported/guyspattk-Sheet.png-f9cb40a826679b2b3f52814e4c92446b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/guywalk-Sheet.png"
-dest_files=["res://.godot/imported/guywalk-Sheet.png-0ee30b26d6cedf294edd6801a23f8cc1.ctex"]
+source_file="res://assets/sprites/elevatorhero1/guyspattk-Sheet.png"
+dest_files=["res://.godot/imported/guyspattk-Sheet.png-f9cb40a826679b2b3f52814e4c92446b.ctex"]
 
 [params]
 

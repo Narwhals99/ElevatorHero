@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cn6q7na3qxy63"
-path="res://.godot/imported/guybattleidle-Sheet.png-ca4ca7525e69ef8ecc748c515f459325.ctex"
+uid="uid://ca5lq4724nnsd"
+path="res://.godot/imported/Office Tileset All 48x48.png-f42f4c5f161155f3e04a5571b6cc031e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/guybattleidle-Sheet.png"
-dest_files=["res://.godot/imported/guybattleidle-Sheet.png-ca4ca7525e69ef8ecc748c515f459325.ctex"]
+source_file="res://assets/tilesets/buildingplayground/Office Tileset All 48x48.png"
+dest_files=["res://.godot/imported/Office Tileset All 48x48.png-f42f4c5f161155f3e04a5571b6cc031e.ctex"]
 
 [params]
 

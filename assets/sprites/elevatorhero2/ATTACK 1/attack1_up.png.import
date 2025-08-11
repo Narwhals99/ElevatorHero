@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg5eixi76ec36"
-path="res://.godot/imported/guytalking-Sheet.png-f6718b99a9254ba60a25c6d2d3263ebf.ctex"
+uid="uid://dgs6ltk68drbt"
+path="res://.godot/imported/attack1_up.png-f49081638c9c7ffc1c9b6b6e8f98f45e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/guytalking-Sheet.png"
-dest_files=["res://.godot/imported/guytalking-Sheet.png-f6718b99a9254ba60a25c6d2d3263ebf.ctex"]
+source_file="res://assets/sprites/elevatorhero2/ATTACK 1/attack1_up.png"
+dest_files=["res://.godot/imported/attack1_up.png-f49081638c9c7ffc1c9b6b6e8f98f45e.ctex"]
 
 [params]
 

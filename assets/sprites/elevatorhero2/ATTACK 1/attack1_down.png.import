@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnyjj712jqpvc"
-path="res://.godot/imported/guyidle-Sheet.png-2ced496fc09056744003bf8fe874500f.ctex"
+uid="uid://btt5lhawifws5"
+path="res://.godot/imported/attack1_down.png-a7ee68c870a5d870aa2a07321e5b889f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/guyidle-Sheet.png"
-dest_files=["res://.godot/imported/guyidle-Sheet.png-2ced496fc09056744003bf8fe874500f.ctex"]
+source_file="res://assets/sprites/elevatorhero2/ATTACK 1/attack1_down.png"
+dest_files=["res://.godot/imported/attack1_down.png-a7ee68c870a5d870aa2a07321e5b889f.ctex"]
 
 [params]
 
