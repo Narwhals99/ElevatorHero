@@ -1,4 +1,3 @@
-# Player.gd (Godot 4.x)
 extends CharacterBody2D
 
 @export var speed := 120.0
@@ -10,8 +9,8 @@ var facing_left := false
 func _physics_process(_delta: float) -> void:
 	# 1) Read input (normalized so diagonals aren't faster)
 	var input_vec := Vector2(
-		Input.get_action_strength("right") - Input.get_action_strength("left"),
-		Input.get_action_strength("down")  - Input.get_action_strength("up")
+		Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
+		Input.get_action_strength("ui_down")  - Input.get_action_strength("ui_up")
 	).normalized()
 
 	# 2) Move
@@ -48,7 +47,7 @@ func _play_idle() -> void:
 	if abs(last_dir.x) >= abs(last_dir.y):
 		sprite.animation = "idle"
 		_set_flip(last_dir.x < 0)
-   
+
 
 	# For multi-frame idle, use play(); for 1-frame idle, stop at frame 0:
 	if sprite.sprite_frames.get_frame_count(sprite.animation) > 1:
