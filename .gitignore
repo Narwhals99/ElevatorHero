@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+.android/
+
+# OS-specific clutter
+.DS_Store
+Thumbs.db
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# Exported builds (optional — uncomment if you don’t want them tracked)
+# /export/
