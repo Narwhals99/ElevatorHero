@@ -1,15 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://blrrni2w5qcun"]
+[gd_scene load_steps=4 format=3 uid="uid://blrrni2w5qcun"]
 
 [ext_resource type="Script" uid="uid://bthnxtjv4vfkc" path="res://scripts/playground/dialogue.gd" id="1_ubk4p"]
 
 [sub_resource type="SystemFont" id="SystemFont_ubk4p"]
-
-[sub_resource type="SystemFont" id="SystemFont_kaldn"]
-font_weight = 200
-font_stretch = 50
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_smsv7"]
-font = SubResource("SystemFont_kaldn")
 
 [node name="dialoguebox" type="CanvasLayer"]
 script = ExtResource("1_ubk4p")
@@ -23,29 +19,34 @@ clip_contents = true
 layout_mode = 0
 offset_left = 5.0
 offset_top = 191.0
-offset_right = 45.0
-offset_bottom = 231.0
-scale = Vector2(9.76372, 2.40549)
+offset_right = 395.0
+offset_bottom = 286.0
 
-[node name="content" type="VBoxContainer" parent="control/panel"]
-clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="dialogue_label" type="Label" parent="control/panel/content"]
-custom_minimum_size = Vector2(2, 2)
-layout_mode = 2
+[node name="dialogue_label" type="Label" parent="control/panel"]
+layout_mode = 0
+offset_right = 282.0
+offset_bottom = 95.0
 size_flags_vertical = 7
 theme_override_fonts/font = SubResource("SystemFont_ubk4p")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 17
 label_settings = SubResource("LabelSettings_smsv7")
 autowrap_mode = 2
-clip_text = true
 
-[node name="choices_container" type="VBoxContainer" parent="control/panel/content"]
+[node name="PanelContainer" type="PanelContainer" parent="control"]
+layout_mode = 0
+offset_left = 287.0
+offset_top = 193.0
+offset_right = 393.0
+offset_bottom = 284.0
+
+[node name="label" type="Panel" parent="control/PanelContainer"]
 clip_contents = true
 layout_mode = 2
+
+[node name="choices_container" type="VBoxContainer" parent="control/PanelContainer/label"]
+clip_contents = true
+layout_mode = 0
+offset_right = 106.0
+offset_bottom = 92.0
+pivot_offset = Vector2(0, 30)
+theme_override_constants/separation = 30

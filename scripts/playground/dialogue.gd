@@ -5,8 +5,8 @@ signal opened
 signal closed
 
 @onready var box: Control = $control
-@onready var dialogue_label: Label = $control/panel/content/dialogue_label
-@onready var choices_container: VBoxContainer = $control/panel/content/choices_container
+@onready var dialogue_label: Label = $control/panel/dialogue_label
+@onready var choices_container: VBoxContainer = $control/PanelContainer/label/choices_container
 var dialogue_data := {}
 var current_node := ""
 var is_open := false
