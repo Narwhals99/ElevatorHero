@@ -6,6 +6,10 @@ extends CharacterBody2D
 var last_dir := Vector2.DOWN   # remember facing for idle
 var facing_left := false
 
+func _ready():
+	$Camera2D.make_current()
+
+
 func _physics_process(_delta: float) -> void:
 	# 1) Read input (normalized so diagonals aren't faster)
 	var input_vec := Vector2(
