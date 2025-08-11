@@ -1,0 +1,96 @@
+[gd_scene load_steps=12 format=3 uid="uid://btcjuhkckxm6q"]
+
+[ext_resource type="Texture2D" uid="uid://mfskwrf8i3jh" path="res://assets/tilesets/buildingplayground/ChatGPT Image Aug 11, 2025, 09_27_27 AM.png" id="1_5mbse"]
+[ext_resource type="AudioStream" uid="uid://hx6vpfputqwa" path="res://assets/tilesets/buildingplayground/looperman-l-5830682-0359867-bossy-simple-bossa-nova-chord-progression.wav" id="2_natt5"]
+[ext_resource type="Script" uid="uid://qlun7ylumpdu" path="res://scripts/mainmenu.gd" id="3_r3g3c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5mbse"]
+bg_color = Color(1, 0.72549, 0.192157, 0.435294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_natt5"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s5g8n"]
+bg_color = Color(1, 0.721569, 0.294118, 0.435294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7yvfd"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r3g3c"]
+bg_color = Color(1, 0.690196, 0.372549, 0.435294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3vvtq"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dfy5j"]
+bg_color = Color(1, 0.713726, 0.411765, 0.435294)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85riq"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="mainmenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.998551)
+script = ExtResource("3_r3g3c")
+
+[node name="background" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_5mbse")
+expand_mode = 3
+
+[node name="play_button" type="Button" parent="."]
+layout_mode = 2
+offset_left = 255.0
+offset_top = 104.0
+offset_right = 458.0
+offset_bottom = 135.0
+scale = Vector2(0.476786, 0.586205)
+theme_override_styles/hover = SubResource("StyleBoxFlat_5mbse")
+theme_override_styles/normal = SubResource("StyleBoxFlat_natt5")
+
+[node name="continue_button" type="Button" parent="."]
+layout_mode = 2
+offset_left = 255.0
+offset_top = 125.0
+offset_right = 458.0
+offset_bottom = 156.0
+scale = Vector2(0.472782, 0.549857)
+theme_override_styles/hover = SubResource("StyleBoxFlat_s5g8n")
+theme_override_styles/normal = SubResource("StyleBoxFlat_7yvfd")
+text = "
+"
+
+[node name="settings_button" type="Button" parent="."]
+layout_mode = 2
+offset_left = 255.0
+offset_top = 146.0
+offset_right = 458.0
+offset_bottom = 177.0
+scale = Vector2(0.474867, 0.551967)
+theme_override_styles/hover = SubResource("StyleBoxFlat_r3g3c")
+theme_override_styles/normal = SubResource("StyleBoxFlat_3vvtq")
+
+[node name="quit_button" type="Button" parent="."]
+layout_mode = 2
+offset_left = 255.0
+offset_top = 166.0
+offset_right = 458.0
+offset_bottom = 197.0
+scale = Vector2(0.473888, 0.535009)
+theme_override_styles/hover = SubResource("StyleBoxFlat_dfy5j")
+theme_override_styles/normal = SubResource("StyleBoxFlat_85riq")
+
+[node name="sfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_natt5")
+autoplay = true
