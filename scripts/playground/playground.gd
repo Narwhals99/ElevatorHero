@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var pause_menu = $pausemenu  # or whatever path it is
+@onready var pause_menu = $UI/pausemenu  # or whatever path it is
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):  # Esc by default

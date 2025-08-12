@@ -38,5 +38,5 @@ func _unhandled_input(event: InputEvent) -> void:
 		_start_conversation()
 
 func _start_conversation():
-	var db = get_tree().current_scene.get_node("dialoguebox") # adjust path if named differently
+	var db = get_tree().current_scene.get_node("UI/dialoguebox") # adjust path if named differently
 	db.start_dialogue("res://dialogues/chilis_npc.json")        # later swap to your Chili's file
