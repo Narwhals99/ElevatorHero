@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
-[ext_resource type="PackedScene" uid="uid://ec53d36xbkdd" path="res://scenes/elevatorhero_2.tscn" id="1_qchbg"]
+[ext_resource type="PackedScene" uid="uid://bej68xh5dreg2" path="res://scenes/swordman.tscn" id="2_2q4k0"]
 [ext_resource type="Texture2D" uid="uid://mra3k3807tlr" path="res://assets/tilesets/buildingplayground/Office Tileset All 32x32.png" id="2_kddj0"]
 [ext_resource type="Texture2D" uid="uid://w0pbd0jgjbho" path="res://assets/tilesets/buildingplayground/Buildings - High Lights 1.png" id="2_mm0a5"]
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
@@ -1610,7 +1610,9 @@ sources/0 = SubResource("TileSetAtlasSource_q8s1k")
 y_sort_enabled = true
 script = ExtResource("1_emj6c")
 
-[node name="elevatorhero_2" parent="." instance=ExtResource("1_qchbg")]
+[node name="Swordman" parent="." instance=ExtResource("2_2q4k0")]
+position = Vector2(155, 107)
+scale = Vector2(1.1198, 1.41439)
 
 [node name="Node2D" type="Node2D" parent="."]
 

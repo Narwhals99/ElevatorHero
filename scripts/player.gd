@@ -8,8 +8,8 @@ extends CharacterBody2D
 var last_dir := Vector2.DOWN   # remember facing for idle
 var facing_left := false
 
-func _ready():
-	$Camera2D.make_current()
+# func _ready():w
+# 	$Camera2D.make_current()
 
 
 func _physics_process(_delta: float) -> void:
