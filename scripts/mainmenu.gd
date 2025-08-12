@@ -1,13 +1,24 @@
-# main_menu.gd
+# mainmenu.gd (on your menu root Control)
 extends Control
+signal start_game_requested(level_id: String)
+signal quit_requested
 
-func _ready():
-	$play_button.pressed.connect(_on_play_pressed)
-	$quit_button.pressed.connect(_on_quit_pressed)
+@onready var play_btn: Button = $play_button
+@onready var quit_btn: Button = $quit_button
 
-func _on_play_pressed():
-	# Change to your "playground" scene
-	get_tree().change_scene_to_file("res://scenes/playground.tscn")
+func _ready() -> void:
+	# Force connections in code so we don't rely on editor wiring
+	if not play_btn.pressed.is_connected(_on_play_pressed):
+		play_btn.pressed.connect(_on_play_pressed)
+	if not quit_btn.pressed.is_connected(_on_quit_pressed):
+		quit_btn.pressed.connect(_on_quit_pressed)
+	print("[menu] play connected:", play_btn.pressed.is_connected(_on_play_pressed),
+		  " quit connected:", quit_btn.pressed.is_connected(_on_quit_pressed))
 
-func _on_quit_pressed():
-	get_tree().quit()
+func _on_play_pressed() -> void:
+	print("[menu] Play pressed")
+	emit_signal("start_game_requested", "playground")
+
+func _on_quit_pressed() -> void:
+	print("[menu] Quit pressed")
+	emit_signal("quit_requested")

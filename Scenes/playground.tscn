@@ -1,13 +1,11 @@
-[gd_scene load_steps=16 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=14 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
 [ext_resource type="Texture2D" uid="uid://mra3k3807tlr" path="res://assets/tilesets/buildingplayground/Office Tileset All 32x32.png" id="2_kddj0"]
 [ext_resource type="Texture2D" uid="uid://w0pbd0jgjbho" path="res://assets/tilesets/buildingplayground/Buildings - High Lights 1.png" id="2_mm0a5"]
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
-[ext_resource type="PackedScene" uid="uid://bk6kadoji6ea7" path="res://scenes/pausemenu.tscn" id="6_o6wi6"]
 [ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scenes/playground_npc.tscn" id="8_mrac1"]
-[ext_resource type="PackedScene" uid="uid://blrrni2w5qcun" path="res://scenes/dialoguebox.tscn" id="9_2q4k0"]
 [ext_resource type="PackedScene" uid="uid://ec53d36xbkdd" path="res://scenes/elevatorhero_2.tscn" id="9_x1amm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qchbg"]
@@ -1670,13 +1668,3 @@ motion_scale = Vector2(-0.1, -0.1)
 
 [node name="Sprite2D" type="Sprite2D" parent="scene_background/ParallaxBackground/buildings"]
 texture = ExtResource("2_mm0a5")
-
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="pausemenu" parent="UI" instance=ExtResource("6_o6wi6")]
-
-[node name="dialoguebox" parent="UI" instance=ExtResource("9_2q4k0")]

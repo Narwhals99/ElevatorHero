@@ -1,5 +1,8 @@
 extends CharacterBody2D  # or StaticBody2D if this NPC doesn't move
 
+@export var dialogue_json: String = "res://dialogues/chilis_npc.json"
+@onready var dialogue_box := get_tree().get_first_node_in_group("dialogue_ui")
+
 @onready var talk_hint: Label = $talk_hint
 @onready var talk_area: Area2D = $talk_area
 
@@ -37,6 +40,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			talk_hint.visible = false
 		_start_conversation()
 
-func _start_conversation():
-	var db = get_tree().current_scene.get_node("UI/dialoguebox") # adjust path if named differently
-	db.start_dialogue("res://dialogues/chilis_npc.json")        # later swap to your Chili's file
+func _start_conversation() -> void:
+	if dialogue_box == null:
+		push_error("No DialogueBox found in group 'dialogue_ui'")
+		return
+	if dialogue_box.has_method("start_dialogue"):
+		dialogue_box.start_dialogue(dialogue_json)
+	elif dialogue_box.has_method("show_dialogue"):
+		dialogue_box.show_dialogue("...")  # fallback if your script uses a different API
