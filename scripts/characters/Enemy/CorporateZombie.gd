@@ -12,12 +12,13 @@ extends CharacterBody2D
 @onready var agent: NavigationAgent2D = $agent
 @onready var aggro_area: Area2D = $AggroArea
 @onready var sprite: AnimatedSprite2D = null
-@onready var attack_hitbox: Area2D = $AttackHitbox	# NEW: hitbox node reference
-@onready var level_root := get_tree().current_scene	# NEW: playground root to listen for respawns
+@onready var attack_hitbox: Area2D = $AttackHitbox
+@onready var level_root := get_tree().current_scene
 
 const CORNER_EPS := 2.0
 
 var _repath_accum := 0.0
+var _aggro_scan_accum := 0.0	# NEW: periodic aggro scan
 var aggro := false
 var player: Node2D = null
 
@@ -25,8 +26,8 @@ var is_attacking := false
 var is_dead := false
 var hurt_lock := false
 var attack_cooldown := 0.0
-var hit_this_swing := false	# NEW: to prevent multiple hits per swing
-var _swing_id := 0			# NEW: increments each attack to tag the swing
+var hit_this_swing := false
+var _swing_id := 0
 
 func _ready() -> void:
 	agent.target_desired_distance = stop_distance
@@ -43,56 +44,83 @@ func _ready() -> void:
 	if sprite and sprite.sprite_frames and sprite.sprite_frames.has_animation("attack"):
 		sprite.sprite_frames.set_animation_loop("attack", false)
 
-	# Find the player once; we won't chase until aggro == true
-	player = get_tree().get_first_node_in_group("player")
-	if player == null:
-		var by_name := get_tree().get_root().find_child("player", true, false)
-		if by_name is Node2D:
-			player = by_name
+	# Find the player
+	_try_get_player()
 
-	# Connect aggro signals (avoid duplicate connects)
-	if aggro_area and not aggro_area.body_entered.is_connected(_on_aggro_enter):
-		aggro_area.body_entered.connect(_on_aggro_enter)
-	if aggro_area and not aggro_area.body_exited.is_connected(_on_aggro_exit):
-		aggro_area.body_exited.connect(_on_aggro_exit)
+	# Ensure AggroArea is active
 	if aggro_area:
-		aggro_area.monitoring = true	# NEW: ensure overlap queries work
+		if not aggro_area.body_entered.is_connected(_on_aggro_enter):
+			aggro_area.body_entered.connect(_on_aggro_enter)
+		if not aggro_area.body_exited.is_connected(_on_aggro_exit):
+			aggro_area.body_exited.connect(_on_aggro_exit)
+		aggro_area.monitoring = true
 
-	# Connect attack hitbox signals (avoid duplicates)
+	# Ensure the AggroArea's mask includes the player's layer (bullet-proof)
+	_sync_aggro_mask_to_player()	# NEW
+
+	# Attack hitbox setup
 	if attack_hitbox and not attack_hitbox.body_entered.is_connected(_on_attack_hitbox_body_entered):
 		attack_hitbox.body_entered.connect(_on_attack_hitbox_body_entered)
-	attack_hitbox.monitoring = false	# Off until swing moment
+	attack_hitbox.monitoring = false
 	if attack_hitbox and not attack_hitbox.is_in_group("enemy_attack"):
-		attack_hitbox.add_to_group("enemy_attack")	# NEW: so player Hurtbox can recognize it
-	attack_hitbox.set_meta("damage", 1)			# NEW: optional, lets player read damage
-	attack_hitbox.set_meta("active", false)		# NEW: only true during swing
-	attack_hitbox.set_meta("swing_id", _swing_id)	# NEW: initialize tag
+		attack_hitbox.add_to_group("enemy_attack")
+	attack_hitbox.set_meta("damage", 1)
+	attack_hitbox.set_meta("active", false)
+	attack_hitbox.set_meta("swing_id", _swing_id)
 
-	# Listen for respawned players from playground
+	# Listen for respawned players from scene (optional) AND via group broadcast
 	if level_root and level_root.has_signal("player_spawned") and not level_root.player_spawned.is_connected(_on_player_spawned):
-		level_root.player_spawned.connect(_on_player_spawned)	# NEW
+		level_root.player_spawned.connect(_on_player_spawned)
 
 	_play("idle")
-	
-	add_to_group("enemies")	# NEW: for group broadcast from playground
 
-func _on_player_spawned(p: Node2D) -> void:	# NEW
+	if not is_in_group("enemies"):
+		add_to_group("enemies")
+
+func _try_get_player() -> void:
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player")
+		if player == null:
+			var by_name := get_tree().get_root().find_child("player", true, false)
+			if by_name is Node2D:
+				player = by_name
+	if is_instance_valid(player):
+		print("[CZ] have player:", player.name, " at ", player.global_position)
+
+func _sync_aggro_mask_to_player() -> void:
+	if not aggro_area:
+		return
+	# If player exists and is a physics body, ensure AggroArea can see it
+	if is_instance_valid(player) and player is PhysicsBody2D:
+		var p_layer := (player as PhysicsBody2D).collision_layer
+		if p_layer != 0:
+			aggro_area.collision_mask |= p_layer
+			print("[CZ] AggroArea mask set to include player layer (mask now): ", aggro_area.collision_mask)
+
+func _on_player_spawned(p: Node2D) -> void:
+	print("[CZ] on_player_spawned")
 	player = p
 	aggro = false
 	agent.target_position = p.global_position
 	_repath_accum = repath_interval
-	_force_aggro_check()	# NEW: immediately re-arm aggro if already overlapping
+	_sync_aggro_mask_to_player()	# NEW
+	_force_aggro_check()
 
 func _on_aggro_enter(body: Node) -> void:
 	if is_dead:
 		return
-	if body == player or body.is_in_group("player"):
+	if body.is_in_group("player"):
+		player = body as Node2D			# << ensure we chase the CURRENT instance
 		aggro = true
+		agent.target_position = player.global_position
+		_repath_accum = repath_interval	# << force an immediate repath this frame
+
 
 func _on_aggro_exit(body: Node) -> void:
 	if is_dead:
 		return
-	if body == player or body.is_in_group("player"):
+	if body.is_in_group("player"):
+		print("[CZ] aggro exit -> FALSE")
 		aggro = false
 		agent.target_position = global_position
 		velocity = Vector2.ZERO
@@ -108,36 +136,34 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
-	
-	# Reacquire player if we lost the reference (e.g., after respawn/scene swap)
+
+	# Reacquire player if lost; also keep mask in sync
 	if player == null or not is_instance_valid(player):
-		player = get_tree().get_first_node_in_group("player")
-		# when re-grabbing, force a repath right away
+		_try_get_player()
+		_sync_aggro_mask_to_player()
 		if is_instance_valid(player):
 			agent.target_position = player.global_position
 			_repath_accum = repath_interval
 
-	# Safety: if we're not attacking, the hitbox must be cold
+	# Safety: keep hitbox cold when not attacking
 	if not is_attacking and attack_hitbox and attack_hitbox.monitoring:
 		attack_hitbox.monitoring = false
-		attack_hitbox.set_meta("active", false)	# NEW
+		attack_hitbox.set_meta("active", false)
 
-	# If we have a player and our AggroArea overlaps them, force aggro = true
-	if not aggro and aggro_area and is_instance_valid(player):
-		var bodies := aggro_area.get_overlapping_bodies()
-		if bodies and bodies.has(player):
-			aggro = true
+	# Periodic aggro wake-up (in case signals didn't fire)
+	_aggro_scan_accum += delta
+	if _aggro_scan_accum >= 0.2:
+		_aggro_scan_accum = 0.0
+		_force_aggro_check()
 
-	# Attack state — keep position and fail-safe exit if anim stopped (non-loop)
+	# Attack lock
 	if is_attacking:
 		agent.target_position = global_position
 		velocity = Vector2.ZERO
-		if sprite:
-			if not sprite.is_playing():
-				# Shouldn't happen (we one-shot), but unstick if it does
-				is_attacking = false
-				attack_hitbox.monitoring = false
-				attack_hitbox.set_meta("active", false)	# NEW
+		if sprite and not sprite.is_playing():
+			is_attacking = false
+			attack_hitbox.monitoring = false
+			attack_hitbox.set_meta("active", false)
 		move_and_slide()
 		return
 
@@ -145,7 +171,6 @@ func _physics_process(delta: float) -> void:
 
 	if aggro and is_instance_valid(player):
 		_repath_accum += delta
-		# Repath on cadence
 		if _repath_accum >= repath_interval:
 			agent.target_position = player.global_position
 			_repath_accum = 0.0
@@ -156,10 +181,9 @@ func _physics_process(delta: float) -> void:
 			if to_next.length() > CORNER_EPS:
 				dir = to_next.normalized()
 	else:
-		# idle: keep target on self so agent doesn't wander
 		agent.target_position = global_position
 
-	# --- Attack gate (stricter + cooldown) ---
+	# --- Attack gate ---
 	if aggro and is_instance_valid(player) and attack_cooldown <= 0.0:
 		var dist_to_player := global_position.distance_to(player.global_position)
 		var ready_to_attack: bool = agent.is_navigation_finished() and dist_to_player <= stop_distance
@@ -178,11 +202,10 @@ func _physics_process(delta: float) -> void:
 				if not sprite.animation_finished.is_connected(_on_attack_finished):
 					sprite.animation_finished.connect(_on_attack_finished, CONNECT_ONE_SHOT)
 
-			# Enable hitbox at attack start
-			_swing_id += 1									# NEW
-			attack_hitbox.set_meta("swing_id", _swing_id)	# NEW
+			_swing_id += 1
+			attack_hitbox.set_meta("swing_id", _swing_id)
 			attack_hitbox.monitoring = true
-			attack_hitbox.set_meta("active", true)			# NEW
+			attack_hitbox.set_meta("active", true)
 
 			move_and_slide()
 			return
@@ -200,33 +223,30 @@ func _physics_process(delta: float) -> void:
 
 func _on_attack_finished() -> void:
 	is_attacking = false
-	attack_hitbox.monitoring = false	# disable hitbox after swing
-	attack_hitbox.set_meta("active", false)	# NEW
+	attack_hitbox.monitoring = false
+	attack_hitbox.set_meta("active", false)
 	if is_instance_valid(player):
 		agent.target_position = player.global_position
 	_repath_accum = repath_interval
 
-# ---- NEW: Attack hitbox collision ----
 func _on_attack_hitbox_body_entered(body: Node) -> void:
 	if is_dead or not is_attacking:
 		return
 	if not hit_this_swing and (body == player or body.is_in_group("player")):
 		if "take_damage" in body:
-			body.take_damage(1)	# damage player
+			body.take_damage(1)
 		hit_this_swing = true
 
-# ---- Combat-ish hooks ----
 func start_attack() -> void:
 	if is_dead or hurt_lock:
 		return
 	is_attacking = true
 	hit_this_swing = false
 	attack_cooldown = attack_cooldown_time
-	# Enable hitbox and tag swing here too (if you call start_attack() directly)
-	_swing_id += 1									# NEW
-	attack_hitbox.set_meta("swing_id", _swing_id)	# NEW
+	_swing_id += 1
+	attack_hitbox.set_meta("swing_id", _swing_id)
 	attack_hitbox.monitoring = true
-	attack_hitbox.set_meta("active", true)			# NEW
+	attack_hitbox.set_meta("active", true)
 	_play("attack")
 	if sprite and not sprite.animation_finished.is_connected(_on_attack_finished):
 		sprite.animation_finished.connect(_on_attack_finished, CONNECT_ONE_SHOT)
@@ -248,8 +268,8 @@ func die() -> void:
 	is_dead = true
 	velocity = Vector2.ZERO
 	agent.target_position = global_position
-	attack_hitbox.monitoring = false	# disable hitbox on death
-	attack_hitbox.set_meta("active", false)	# NEW
+	attack_hitbox.monitoring = false
+	attack_hitbox.set_meta("active", false)
 	_play("dead")
 	if sprite and not sprite.animation_finished.is_connected(_on_dead_anim_finished):
 		sprite.animation_finished.connect(_on_dead_anim_finished, CONNECT_ONE_SHOT)
@@ -285,23 +305,35 @@ func _play(anim: String) -> void:
 		sprite.play(anim)
 		sprite.speed_scale = 1.0
 
-# --- NEW: explicit respawn callback used by call_group("enemies", ...)
 func on_player_respawned(p: Node2D) -> void:
 	player = p
-	aggro = false
-	agent.target_position = p.global_position
-	_repath_accum = 0.0
-	_force_aggro_check()	# NEW
+	is_attacking = false                 # << prevent being stuck in attack lock
+	hurt_lock = false
+	if attack_hitbox:
+		attack_hitbox.monitoring = false
+		attack_hitbox.set_meta("active", false)
 
-# --- NEW: helper to re-arm aggro when player is already inside the area or close
+	# Don’t force aggro=false here; let the checks decide correctly.
+	_repath_accum = 0.0
+	agent.target_position = p.global_position
+
+	_force_aggro_check()                 # << if you respawn inside the zone, this re-arms aggro
+
+
 func _force_aggro_check() -> void:
+	_try_get_player()
 	if not is_instance_valid(player):
 		return
 	if aggro_area and aggro_area.monitoring:
 		var bodies := aggro_area.get_overlapping_bodies()
 		if bodies and bodies.has(player):
+			if not aggro:
+				print("[CZ] force aggro via overlap")
 			aggro = true
 			return
 	# distance fallback
-	if global_position.distance_to(player.global_position) <= stop_distance * 3.0:
+	var wake_dist := stop_distance * 3.0
+	if global_position.distance_to(player.global_position) <= wake_dist:
+		if not aggro:
+			print("[CZ] force aggro via distance")
 		aggro = true

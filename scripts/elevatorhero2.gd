@@ -31,6 +31,10 @@ func _ready() -> void:
 	# Init health
 	health = max_health
 
+	# Ensure we're always in the "player" group (important for enemies re-targeting)
+	if not is_in_group("player"):
+		add_to_group("player")
+
 	# Fallback spawn; Main.gd will call set_spawn_point() after loading a level
 	spawn_pos = global_position
 
@@ -96,7 +100,8 @@ func _physics_process(delta: float) -> void:
 	# Handle attacking
 	if Input.is_action_just_pressed("attack") and not attacking:
 		attacking = true
-		anim.play("attack_" + last_dir)
+		if anim:
+			anim.play("attack_" + last_dir)
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -112,20 +117,19 @@ func _physics_process(delta: float) -> void:
 			else:
 				last_dir = ("down" if input_vector.y > 0.0 else "up")
 
-			anim.play("run_" + last_dir)
+			if anim:
+				anim.play("run_" + last_dir)
 		else:
 			velocity = Vector2.ZERO
-			anim.play("idle_" + last_dir)
+			if anim:
+				anim.play("idle_" + last_dir)
 
 	move_and_slide()
 
 func _on_AnimatedSprite2D_animation_finished() -> void:
 	# Reset attack state when done
-	if anim.animation.begins_with("attack_"):
+	if anim and anim.animation.begins_with("attack_"):
 		attacking = false
-
-func _on_animated_sprite_2d_animation_finished() -> void:
-	pass	# (Editor may have auto-generated this; safe to keep)
 
 # --- Hurtbox & damage handling ---
 func _on_hurtbox_area_entered(area: Area2D) -> void:
@@ -184,6 +188,9 @@ func _respawn() -> void:
 	health = max_health
 	i_frames = respawn_i_frames
 
+	# Clear per-attack hit memory so first hit after respawn isn't ignored
+	_last_hit_swing_by_area.clear()
+
 	# Clear states & movement BEFORE snapping
 	controls_locked = false
 	attacking = false
@@ -198,6 +205,10 @@ func _respawn() -> void:
 	if anim:
 		anim.modulate = Color(1, 1, 1)
 		anim.play("idle_" + last_dir)
+
+	# Tell enemies to reacquire this instance (critical for post-respawn aggro)
+	if get_tree():
+		get_tree().call_group("enemies", "on_player_respawned", self)
 
 func _die() -> void:
 	controls_locked = true
