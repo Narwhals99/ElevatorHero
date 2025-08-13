@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=20 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
 [ext_resource type="Texture2D" uid="uid://mra3k3807tlr" path="res://assets/tilesets/buildingplayground/Office Tileset All 32x32.png" id="2_kddj0"]
 [ext_resource type="Texture2D" uid="uid://w0pbd0jgjbho" path="res://assets/tilesets/buildingplayground/Buildings - High Lights 1.png" id="2_mm0a5"]
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
+[ext_resource type="PackedScene" uid="uid://dlgksmsk1hpoa" path="res://scenes/corporate_zombie.tscn" id="8_2q4k0"]
 [ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scenes/playground_npc.tscn" id="8_mrac1"]
 [ext_resource type="PackedScene" uid="uid://ec53d36xbkdd" path="res://scenes/elevatorhero_2.tscn" id="9_x1amm"]
 
@@ -202,7 +203,7 @@ texture = ExtResource("2_kddj0")
 21:46/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_mrac1"]
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 524289
 physics_layer_0/collision_mask = 17
 physics_layer_0/physics_material = SubResource("PhysicsMaterial_emj6c")
 sources/0 = SubResource("TileSetAtlasSource_emj6c")
@@ -211,6 +212,12 @@ sources/0 = SubResource("TileSetAtlasSource_emj6c")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kddj0"]
 size = Vector2(13, 28)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_mrac1"]
+vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)])
+agent_radius = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_q8s1k"]
 texture = ExtResource("2_kddj0")
@@ -891,12 +898,16 @@ texture = ExtResource("2_kddj0")
 7:26/0 = 0
 8:26/0 = 0
 8:26/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+8:26/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 9:26/0 = 0
 9:26/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+9:26/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 10:26/0 = 0
 10:26/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+10:26/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 11:26/0 = 0
 11:26/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:26/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 12:26/0 = 0
 13:26/0 = 0
 14:26/0 = 0
@@ -926,10 +937,14 @@ texture = ExtResource("2_kddj0")
 6:27/0 = 0
 7:27/0 = 0
 8:27/0 = 0
+8:27/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 9:27/0 = 0
+9:27/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 10:27/0 = 0
+10:27/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 11:27/0 = 0
 11:27/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:27/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 12:27/0 = 0
 13:27/0 = 0
 14:27/0 = 0
@@ -943,10 +958,14 @@ texture = ExtResource("2_kddj0")
 6:28/0 = 0
 7:28/0 = 0
 8:28/0 = 0
+8:28/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 9:28/0 = 0
+9:28/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 10:28/0 = 0
+10:28/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 11:28/0 = 0
 11:28/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:28/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 12:28/0 = 0
 13:28/0 = 0
 14:28/0 = 0
@@ -976,10 +995,14 @@ texture = ExtResource("2_kddj0")
 6:29/0 = 0
 7:29/0 = 0
 8:29/0 = 0
+8:29/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 9:29/0 = 0
+9:29/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 10:29/0 = 0
+10:29/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 11:29/0 = 0
 11:29/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:29/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 12:29/0 = 0
 13:29/0 = 0
 14:29/0 = 0
@@ -1009,10 +1032,14 @@ texture = ExtResource("2_kddj0")
 6:30/0 = 0
 7:30/0 = 0
 8:30/0 = 0
+8:30/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 9:30/0 = 0
+9:30/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 10:30/0 = 0
+10:30/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 11:30/0 = 0
 11:30/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:30/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 12:30/0 = 0
 13:30/0 = 0
 14:30/0 = 0
@@ -1042,10 +1069,14 @@ texture = ExtResource("2_kddj0")
 6:31/0 = 0
 7:31/0 = 0
 8:31/0 = 0
+8:31/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 9:31/0 = 0
+9:31/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 10:31/0 = 0
+10:31/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 11:31/0 = 0
 11:31/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+11:31/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_mrac1")
 12:31/0 = 0
 13:31/0 = 0
 14:31/0 = 0
@@ -1766,14 +1797,20 @@ texture = ExtResource("2_kddj0")
 
 [sub_resource type="TileSet" id="TileSet_mm0a5"]
 physics_layer_0/collision_layer = 17
+navigation_layer_0/layers = 128
 sources/0 = SubResource("TileSetAtlasSource_q8s1k")
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_2q4k0"]
+vertices = PackedVector2Array(676.031, -58.1094, -483.977, -71.8672, -426.93, -654, 677.961, -654.992)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-436, -664, 688, -665, 686, -48, -495, -62)])
 
 [node name="playground" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_emj6c")
 
 [node name="elevatorhero_2" parent="." instance=ExtResource("9_x1amm")]
-position = Vector2(-173, 5)
+position = Vector2(48, 137)
 
 [node name="playground_npc" parent="." instance=ExtResource("8_mrac1")]
 position = Vector2(168, 22)
@@ -1838,3 +1875,14 @@ motion_scale = Vector2(-0.1, -0.1)
 
 [node name="Sprite2D" type="Sprite2D" parent="scene_background/ParallaxBackground/buildings"]
 texture = ExtResource("2_mm0a5")
+
+[node name="CorporateZombie" parent="." instance=ExtResource("8_2q4k0")]
+position = Vector2(-4, -379)
+scale = Vector2(0.667979, 0.619973)
+max_health = null
+speed = null
+touch_damage = null
+knockback = null
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_2q4k0")

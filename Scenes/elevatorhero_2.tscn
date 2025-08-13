@@ -396,25 +396,25 @@ animations = [{
 "duration": 0.8,
 "texture": SubResource("AtlasTexture_abkk0")
 }, {
-"duration": 1.0,
+"duration": 0.7,
 "texture": SubResource("AtlasTexture_gkic5")
 }, {
-"duration": 1.0,
+"duration": 0.8,
 "texture": SubResource("AtlasTexture_i5xfq")
 }, {
-"duration": 1.0,
+"duration": 0.8,
 "texture": SubResource("AtlasTexture_1tutm")
 }, {
-"duration": 1.0,
+"duration": 0.8,
 "texture": SubResource("AtlasTexture_unvr5")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_q45y0")
 }, {
-"duration": 1.0,
+"duration": 0.3,
 "texture": SubResource("AtlasTexture_nxf4r")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_yshny")
 }],
 "loop": false,
@@ -434,16 +434,16 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_d2yf6")
 }, {
-"duration": 1.0,
+"duration": 0.3,
 "texture": SubResource("AtlasTexture_g0bi8")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_e2152")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_5wnuh")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_w3bgs")
 }],
 "loop": false,
@@ -466,10 +466,10 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bg0sd")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_ejeej")
 }, {
-"duration": 1.0,
+"duration": 0.2,
 "texture": SubResource("AtlasTexture_bl4gh")
 }],
 "loop": false,
@@ -489,13 +489,13 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_x0c68")
 }, {
-"duration": 1.0,
+"duration": 0.8,
 "texture": SubResource("AtlasTexture_1ql5s")
 }, {
-"duration": 1.0,
+"duration": 0.7,
 "texture": SubResource("AtlasTexture_ohfpm")
 }, {
-"duration": 1.0,
+"duration": 0.3,
 "texture": SubResource("AtlasTexture_2m30n")
 }, {
 "duration": 0.2,
@@ -743,22 +743,21 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4e03w"]
 size = Vector2(18, 14)
 
-[node name="elevatorhero_2" type="CharacterBody2D"]
+[node name="elevatorhero_2" type="CharacterBody2D" groups=["player"]]
+collision_layer = 5
 collision_mask = 17
 script = ExtResource("1_qai2f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(209, 135)
+position = Vector2(0, 4.5)
 sprite_frames = SubResource("SpriteFrames_m8ow3")
-animation = &"attack_up"
-frame = 6
-frame_progress = 1.0
+animation = &"attack_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(209, 144)
+position = Vector2(0, 13.5)
 shape = SubResource("RectangleShape2D_4e03w")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(210, 132)
+position = Vector2(1, 1.5)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

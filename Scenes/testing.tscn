@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcjbu3ptn1kqa"]
+
+[ext_resource type="PackedScene" uid="uid://dlgksmsk1hpoa" path="res://scenes/corporate_zombie.tscn" id="1_pcu7d"]
+[ext_resource type="PackedScene" uid="uid://ec53d36xbkdd" path="res://scenes/elevatorhero_2.tscn" id="2_l6grw"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CorporateZombie" parent="." instance=ExtResource("1_pcu7d")]
+max_health = 8
+
+[node name="elevatorhero_2" parent="." instance=ExtResource("2_l6grw")]
+position = Vector2(509, 404)
+scale = Vector2(1.44, 1.48855)
