@@ -6,7 +6,6 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="CorporateZombie" parent="." instance=ExtResource("1_pcu7d")]
-max_health = 8
 
 [node name="elevatorhero_2" parent="." instance=ExtResource("2_l6grw")]
 position = Vector2(509, 404)
