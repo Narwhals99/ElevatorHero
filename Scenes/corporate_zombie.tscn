@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://dlgksmsk1hpoa"]
+[gd_scene load_steps=41 format=3 uid="uid://dlgksmsk1hpoa"]
 
 [ext_resource type="Script" uid="uid://c0sgx1on1cqxu" path="res://scripts/characters/Enemy/CorporateZombie.gd" id="1_fgw1b"]
 [ext_resource type="Texture2D" uid="uid://cnpghowf20brt" path="res://assets/sprites/enemies/corporatezombie/Attack.png" id="1_k2fh2"]
@@ -8,7 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://w2eqawrvbuye" path="res://assets/sprites/enemies/corporatezombie/Walk.png" id="5_8lho0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_eirw1"]
-height = 22.0
+radius = 14.0
+height = 28.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fgw1b"]
 radius = 175.0
@@ -152,7 +153,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_u0t0c")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
 "speed": 9.0
 }, {
@@ -257,6 +258,10 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bor6v"]
+radius = 18.3527
+height = 36.7053
+
 [node name="CorporateZombie" type="CharacterBody2D"]
 motion_mode = 1
 wall_min_slide_angle = 0.0
@@ -269,10 +274,11 @@ radius = 35.15
 debug_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 13)
+position = Vector2(-6, 11)
 shape = SubResource("CapsuleShape2D_eirw1")
 
 [node name="AggroArea" type="Area2D" parent="."]
+visible = false
 position = Vector2(1, -34)
 scale = Vector2(2.0326, 1.79137)
 collision_mask = 5
@@ -286,5 +292,15 @@ position = Vector2(-2, -42)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visuals"]
 sprite_frames = SubResource("SpriteFrames_w2mnk")
-animation = &"idle"
-frame_progress = 0.272232
+animation = &"attack"
+frame = 4
+frame_progress = 1.0
+
+[node name="AttackHitbox" type="Area2D" parent="." groups=["enemy_attack"]]
+collision_layer = 5
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
+position = Vector2(11, -23)
+rotation = 0.844516
+shape = SubResource("CapsuleShape2D_bor6v")

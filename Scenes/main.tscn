@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://bpaq6c12ivcwh"]
+[gd_scene load_steps=5 format=3 uid="uid://bpaq6c12ivcwh"]
 
 [ext_resource type="Script" uid="uid://bpn5guqob5287" path="res://scripts/global/Main.gd" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://ec53d36xbkdd" path="res://scenes/elevatorhero_2.tscn" id="2_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://blrrni2w5qcun" path="res://scenes/dialoguebox.tscn" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bk6kadoji6ea7" path="res://scenes/pausemenu.tscn" id="3_jyhfs"]
 
 [node name="Game" type="Node2D" groups=["game_root"]]
 script = ExtResource("1_o5qli")
+player_scene = ExtResource("2_jyhfs")
 
 [node name="level_root" type="Node" parent="."]
 
