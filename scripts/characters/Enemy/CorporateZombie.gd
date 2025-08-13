@@ -83,6 +83,3 @@ func _draw() -> void:
 				Color(1, 0, 0), # red
 				2.0
 				)
-
-func _process(_delta: float) -> void:
-	update() # redraw every frame so path updates

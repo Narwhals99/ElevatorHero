@@ -354,7 +354,7 @@ animations = [{
 "speed": 8.0
 }, {
 "frames": [{
-"duration": 0.9,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_h58k2")
 }, {
 "duration": 1.0,
@@ -461,7 +461,9 @@ script = ExtResource("2_lsbpm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_qnqp2")
-animation = &"walk"
+animation = &"attack"
+frame = 13
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-32, 8)

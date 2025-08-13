@@ -1801,7 +1801,7 @@ navigation_layer_0/layers = 128
 sources/0 = SubResource("TileSetAtlasSource_q8s1k")
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_2q4k0"]
-vertices = PackedVector2Array(676.031, -58.1094, -483.977, -71.8672, -426.93, -654, 677.961, -654.992)
+vertices = PackedVector2Array(669.141, -66.0469, -483.969, -71.9375, -426.93, -654, 677.844, -654.992)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-436, -664, 688, -665, 686, -48, -495, -62)])
 
@@ -1879,10 +1879,6 @@ texture = ExtResource("2_mm0a5")
 [node name="CorporateZombie" parent="." instance=ExtResource("8_2q4k0")]
 position = Vector2(-4, -379)
 scale = Vector2(0.667979, 0.619973)
-max_health = null
-speed = null
-touch_damage = null
-knockback = null
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_2q4k0")
