@@ -298,21 +298,30 @@ sprite_frames = SubResource("SpriteFrames_w2mnk")
 animation = &"dead"
 
 [node name="AttackHitbox" type="Area2D" parent="." groups=["enemy_attack"]]
+position = Vector2(5, -1)
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
 position = Vector2(-5, -9)
 rotation = 0.844516
+scale = Vector2(2.32203, 1)
 shape = SubResource("CapsuleShape2D_bor6v")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="AttackHitbox"]
 position = Vector2(-5, -10)
 rotation = -0.92677
+scale = Vector2(2.16036, 1.11201)
 shape = SubResource("CapsuleShape2D_bor6v")
 
 [node name="Hurtbox" type="Area2D" parent="."]
+scale = Vector2(0.759137, 0.888323)
 collision_layer = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 position = Vector2(-1, -10)
 shape = SubResource("CapsuleShape2D_odjsi")
+
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
+position = Vector2(-2, -12)
+scale = Vector2(0.794091, 0.837714)
+radius = 47.62

@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 # ---- Tunables ----
 @export var speed: float = 70.0
-@export var stop_distance: float = 25.0
+@export var stop_distance: float = 15.0
 @export var sprite_path: NodePath            # leave empty if your sprite is named "AnimatedSprite2D"
 @export var repath_interval: float = 0.2
 @export var attack_cooldown_time: float = 0.25   # small lockout after each attack
