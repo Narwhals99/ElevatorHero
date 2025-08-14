@@ -2,12 +2,25 @@ extends CharacterBody2D
 
 @export var speed: float = 120.0
 @export var debug_respawn: bool = false
-@export var hitbox_offsets := {
-	"down":  Vector2(10,  8),
-	"up":    Vector2(10, -8),
-	"left":  Vector2(-10, 0),
-	"right": Vector2(10,  0)
-}
+
+@export var hb_off_down: Vector2 = Vector2(0, 10)
+@export var hb_off_up: Vector2 = Vector2(0, -10)
+@export var hb_off_left: Vector2 = Vector2(-10, 0)
+@export var hb_off_right: Vector2 = Vector2(10, 0)
+@export var hb_rot_down_deg: float = 90.0
+@export var hb_rot_up_deg: float = -90.0
+@export var hb_rot_left_deg: float = 0.0
+@export var hb_rot_right_deg: float = 0.0
+
+
+@export var body_shape_path: NodePath			# set to your player CollisionShape2D (optional)
+@export var hitbox_margin: float = 2.0			# little gap between body and hitbox
+
+@onready var body_shape: CollisionShape2D = (
+	get_node_or_null(body_shape_path) if body_shape_path != NodePath("")
+	else get_node_or_null("CollisionShape2D")
+)
+@onready var hb_shape: CollisionShape2D = $AttackHitbox/CollisionShape2D
 
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
@@ -68,14 +81,26 @@ func _ready() -> void:
 	if hurtbox and not hurtbox.area_entered.is_connected(_on_hurtbox_area_entered):
 		hurtbox.area_entered.connect(_on_hurtbox_area_entered)
 
-	# --- NEW: AttackHitbox signals (kept OFF by default) ---
+	# --- AttackHitbox signals (kept OFF by default) ---
 	if attack_hitbox:
 		attack_hitbox.monitoring = false
 		if not attack_hitbox.area_entered.is_connected(_on_attack_area_entered):
 			attack_hitbox.area_entered.connect(_on_attack_area_entered)
 		if not attack_hitbox.body_entered.is_connected(_on_attack_body_entered):
 			attack_hitbox.body_entered.connect(_on_attack_body_entered)
-	# --------------------------------------------------------
+	# --------------------------------------------------
+
+	# Make sure we get an animation_finished callback
+	if anim and not anim.animation_finished.is_connected(_on_AnimatedSprite2D_animation_finished):
+		anim.animation_finished.connect(_on_AnimatedSprite2D_animation_finished)
+		
+	if hb_shape:
+		hb_shape.position = Vector2.ZERO
+		
+	if hb_shape:
+		hb_shape.rotation = 0.0
+
+
 
 func set_spawn_point(world_pos: Vector2) -> void:
 	# store the spawn in GLOBAL space
@@ -116,6 +141,8 @@ func _physics_process(delta: float) -> void:
 	# Finish attack state if animation ended
 	if attacking and (not anim.is_playing() or not anim.animation.begins_with("attack_")):
 		attacking = false
+		if attack_hitbox:
+			attack_hitbox.monitoring = false	# safety: never leave it on
 
 	var input_vector := Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
@@ -133,15 +160,12 @@ func _physics_process(delta: float) -> void:
 		_hit_bodies.clear()
 
 		if attack_hitbox:
-			# place hitbox in front of the player for this swing
-			attack_hitbox.position = hitbox_offsets.get(last_dir, Vector2.ZERO)
-			attack_hitbox.rotation = 0.0  # keep it simple for now
+			_set_attack_box_for_dir(last_dir)	# << place/rotate for this swing
 			attack_hitbox.monitoring = true
 
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
-
 
 	# If not attacking, handle movement
 	if not attacking:
@@ -167,10 +191,46 @@ func _on_AnimatedSprite2D_animation_finished() -> void:
 	# Reset attack state when done
 	if anim and anim.animation.begins_with("attack_"):
 		attacking = false
-		# --- NEW: disable hitbox when the attack ends ---
+		# disable hitbox when the attack ends
 		if attack_hitbox:
 			attack_hitbox.monitoring = false
-		# ------------------------------------------------
+
+func _set_attack_box_for_dir(dir: String) -> void:
+	if not attack_hitbox:
+		return
+
+	# 1) Choose offset: auto from shapes if available, else manual hb_off_* exports
+	var offset: Vector2
+	if body_shape and body_shape.shape and hb_shape and hb_shape.shape:
+		var offs := _calc_dir_offsets()
+		offset = offs.get(dir, Vector2.ZERO) as Vector2
+	else:
+		match dir:
+			"left":
+				offset = hb_off_left
+			"right":
+				offset = hb_off_right
+			"up":
+				offset = hb_off_up
+			_:
+				offset = hb_off_down
+
+	# 2) Choose rotation from per-direction exports
+	var rot_deg: float
+	match dir:
+		"left":
+			rot_deg = hb_rot_left_deg
+		"right":
+			rot_deg = hb_rot_right_deg
+		"up":
+			rot_deg = hb_rot_up_deg
+		_:
+			rot_deg = hb_rot_down_deg
+
+	attack_hitbox.position = offset
+	attack_hitbox.rotation = deg_to_rad(rot_deg)
+
+
 
 # --- Hurtbox & damage handling ---
 func _on_hurtbox_area_entered(area: Area2D) -> void:
@@ -260,7 +320,7 @@ func _die() -> void:
 		await anim.animation_finished
 	_respawn()
 
-# --- NEW: Attack hitbox callbacks + helper ---
+# --- Attack hitbox callbacks + helper ---
 func _on_attack_area_entered(other_area: Area2D) -> void:
 	if not attack_hitbox or not attack_hitbox.monitoring:
 		return
@@ -289,3 +349,26 @@ func _try_damage_target(target: Node) -> void:
 	if target.is_in_group("enemies") and target.has_method("take_damage"):
 		target.take_damage(attack_damage, global_position, attack_knockback)
 # ------------------------------------------------
+
+func _calc_dir_offsets() -> Dictionary:
+	var body_half_x := 8.0
+	var body_half_y := 8.0
+	if body_shape and body_shape.shape is RectangleShape2D:
+		var bs: RectangleShape2D = body_shape.shape
+		body_half_x = bs.size.x * 0.5
+		body_half_y = bs.size.y * 0.5
+
+	var hb_half_x := 6.0
+	var hb_half_y := 6.0
+	if hb_shape and hb_shape.shape is RectangleShape2D:
+		var hs: RectangleShape2D = hb_shape.shape
+		hb_half_x = hs.size.x * 0.5
+		hb_half_y = hs.size.y * 0.5
+
+	# Offset = half of body + half of hitbox + small margin
+	return {
+		"left":	Vector2(-(body_half_x + hb_half_x + hitbox_margin), 0),
+		"right":Vector2( body_half_x + hb_half_x + hitbox_margin, 0),
+		"up":	Vector2(0, -(body_half_y + hb_half_y + hitbox_margin)),
+		"down":	Vector2(0,  body_half_y + hb_half_y + hitbox_margin)
+	}

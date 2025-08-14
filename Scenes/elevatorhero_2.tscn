@@ -764,22 +764,30 @@ radius = 8.0
 collision_layer = 5
 collision_mask = 21
 script = ExtResource("1_qai2f")
+hb_off_down = Vector2(0, 25)
+hb_off_up = Vector2(-5, -10)
+hb_off_left = Vector2(-30, 10)
+hb_off_right = Vector2(-27, 15)
+hb_rot_down_deg = 0.0
+hb_rot_up_deg = 0.0
+hb_rot_right_deg = 180.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, 1)
+position = Vector2(-28, 9)
 sprite_frames = SubResource("SpriteFrames_m8ow3")
 animation = &"attack_right"
 frame = 7
 frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, 14.5)
+position = Vector2(-26, 23)
 shape = SubResource("RectangleShape2D_4e03w")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(1, 1.5)
+position = Vector2(-28, 9)
 
 [node name="Hurtbox" type="Area2D" parent="."]
+position = Vector2(-26, 9)
 collision_layer = 5
 collision_mask = 5
 
@@ -788,6 +796,7 @@ position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_g4x76")
 
 [node name="AttackHitbox" type="Area2D" parent="."]
+position = Vector2(-28, 9)
 collision_layer = 4
 collision_mask = 8
 monitoring = false
