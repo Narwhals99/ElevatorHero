@@ -2,6 +2,13 @@ extends CharacterBody2D
 
 @export var speed: float = 120.0
 @export var debug_respawn: bool = false
+@export var hitbox_offsets := {
+	"down":  Vector2(10,  8),
+	"up":    Vector2(10, -8),
+	"left":  Vector2(-10, 0),
+	"right": Vector2(10,  0)
+}
+
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -27,6 +34,15 @@ var controls_locked := false
 var last_dir := "down"	# Tracks last facing direction
 var attacking := false
 
+# --- NEW: Player attack -> enemy damage wiring ---
+@export var attack_damage: int = 1
+@export var attack_knockback: float = 220
+@onready var attack_hitbox: Area2D = $AttackHitbox
+var _swing_id: int = 0
+var _hit_areas := {}     # area_id -> swing_id
+var _hit_bodies := {}    # body_id -> swing_id
+# -------------------------------------------------
+
 func _ready() -> void:
 	# Init health
 	health = max_health
@@ -51,6 +67,15 @@ func _ready() -> void:
 	# Hook hurtbox signal
 	if hurtbox and not hurtbox.area_entered.is_connected(_on_hurtbox_area_entered):
 		hurtbox.area_entered.connect(_on_hurtbox_area_entered)
+
+	# --- NEW: AttackHitbox signals (kept OFF by default) ---
+	if attack_hitbox:
+		attack_hitbox.monitoring = false
+		if not attack_hitbox.area_entered.is_connected(_on_attack_area_entered):
+			attack_hitbox.area_entered.connect(_on_attack_area_entered)
+		if not attack_hitbox.body_entered.is_connected(_on_attack_body_entered):
+			attack_hitbox.body_entered.connect(_on_attack_body_entered)
+	# --------------------------------------------------------
 
 func set_spawn_point(world_pos: Vector2) -> void:
 	# store the spawn in GLOBAL space
@@ -102,9 +127,21 @@ func _physics_process(delta: float) -> void:
 		attacking = true
 		if anim:
 			anim.play("attack_" + last_dir)
+
+		_swing_id += 1
+		_hit_areas.clear()
+		_hit_bodies.clear()
+
+		if attack_hitbox:
+			# place hitbox in front of the player for this swing
+			attack_hitbox.position = hitbox_offsets.get(last_dir, Vector2.ZERO)
+			attack_hitbox.rotation = 0.0  # keep it simple for now
+			attack_hitbox.monitoring = true
+
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
+
 
 	# If not attacking, handle movement
 	if not attacking:
@@ -130,6 +167,10 @@ func _on_AnimatedSprite2D_animation_finished() -> void:
 	# Reset attack state when done
 	if anim and anim.animation.begins_with("attack_"):
 		attacking = false
+		# --- NEW: disable hitbox when the attack ends ---
+		if attack_hitbox:
+			attack_hitbox.monitoring = false
+		# ------------------------------------------------
 
 # --- Hurtbox & damage handling ---
 func _on_hurtbox_area_entered(area: Area2D) -> void:
@@ -218,3 +259,33 @@ func _die() -> void:
 		anim.play("dead_" + last_dir)
 		await anim.animation_finished
 	_respawn()
+
+# --- NEW: Attack hitbox callbacks + helper ---
+func _on_attack_area_entered(other_area: Area2D) -> void:
+	if not attack_hitbox or not attack_hitbox.monitoring:
+		return
+	var key := other_area.get_instance_id()
+	if _hit_areas.get(key, -1) == _swing_id:
+		return
+	_hit_areas[key] = _swing_id
+	_try_damage_target(other_area.get_parent())
+
+func _on_attack_body_entered(body: Node) -> void:
+	if not attack_hitbox or not attack_hitbox.monitoring:
+		return
+	var key := body.get_instance_id()
+	if _hit_bodies.get(key, -1) == _swing_id:
+		return
+	_hit_bodies[key] = _swing_id
+	_try_damage_target(body)
+
+func _try_damage_target(target: Node) -> void:
+	if not target:
+		return
+	# never damage self or any players
+	if target == self or target.is_in_group("player"):
+		return
+	# only damage enemies; pass full knockback to them
+	if target.is_in_group("enemies") and target.has_method("take_damage"):
+		target.take_damage(attack_damage, global_position, attack_knockback)
+# ------------------------------------------------

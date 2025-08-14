@@ -8,12 +8,19 @@ extends CharacterBody2D
 @export var repath_interval: float = 0.2
 @export var attack_cooldown_time: float = 0.25   # small lockout after each attack
 
+# --- NEW: Combat/health tuning ---
+@export var max_health: int = 6
+@export var i_frames_time: float = 0.15
+@export var knockback_resist: float = 0.2	# 0..1 (1 = no knockback)
+# ---------------------------------
+
 # ---- Nodes / state ----
 @onready var agent: NavigationAgent2D = $agent
 @onready var aggro_area: Area2D = $AggroArea
 @onready var sprite: AnimatedSprite2D = null
 @onready var attack_hitbox: Area2D = $AttackHitbox
 @onready var level_root := get_tree().current_scene
+@onready var health_bar: Node = $HealthBar	# NEW: optional (TextureProgressBar/ProgressBar)
 
 const CORNER_EPS := 2.0
 
@@ -28,6 +35,13 @@ var hurt_lock := false
 var attack_cooldown := 0.0
 var hit_this_swing := false
 var _swing_id := 0
+var _hitbox_base_pos: Vector2 = Vector2.ZERO
+var _facing_sign := 1	# 1 = right, -1 = left
+
+# --- NEW: Health runtime ---
+var health: int = 0
+var i_frames: float = 0.0
+# ---------------------------
 
 func _ready() -> void:
 	agent.target_desired_distance = stop_distance
@@ -76,6 +90,17 @@ func _ready() -> void:
 
 	if not is_in_group("enemies"):
 		add_to_group("enemies")
+	
+	# Cache the default local position of the hitbox so we can mirror it
+	if is_instance_valid(attack_hitbox):
+		_hitbox_base_pos = attack_hitbox.position
+		# Ensure it starts on the "right" by default (facing_sign = 1)
+		attack_hitbox.position = _hitbox_base_pos
+
+	# --- NEW: init health + bar ---
+	health = max_health
+	_update_health_bar()
+	# ------------------------------
 
 func _try_get_player() -> void:
 	if not is_instance_valid(player):
@@ -110,11 +135,10 @@ func _on_aggro_enter(body: Node) -> void:
 	if is_dead:
 		return
 	if body.is_in_group("player"):
-		player = body as Node2D			# << ensure we chase the CURRENT instance
+		player = body as Node2D			# ensure we chase the CURRENT instance
 		aggro = true
 		agent.target_position = player.global_position
-		_repath_accum = repath_interval	# << force an immediate repath this frame
-
+		_repath_accum = repath_interval	# force an immediate repath this frame
 
 func _on_aggro_exit(body: Node) -> void:
 	if is_dead:
@@ -126,16 +150,32 @@ func _on_aggro_exit(body: Node) -> void:
 		velocity = Vector2.ZERO
 		_play("idle")
 
-func _physics_process(delta: float) -> void:
-	# Timers
-	if attack_cooldown > 0.0:
-		attack_cooldown -= delta
+# --- NEW: central facing+mirror helper ---
+func _set_facing_sign(sign: int) -> void:
+	# pythonic ternary in GDScript 4
+	sign = -1 if sign < 0 else 1
+	if sign == _facing_sign:
+		return
+	_facing_sign = sign
+	# Flip sprite and mirror hitbox
+	if sprite:
+		sprite.flip_h = (_facing_sign == -1)
+	if is_instance_valid(attack_hitbox):
+		attack_hitbox.position = Vector2(_hitbox_base_pos.x * _facing_sign, _hitbox_base_pos.y)
 
-	# Lockouts
+func _physics_process(delta: float) -> void:
+	# --- NEW: ticks/locks ---
+	if attack_cooldown > 0.0:
+		attack_cooldown = max(0.0, attack_cooldown - delta)
+
 	if is_dead or hurt_lock:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
+
+	if i_frames > 0.0:
+		i_frames = max(0.0, i_frames - delta)
+	# ------------------------
 
 	# Reacquire player if lost; also keep mask in sync
 	if player == null or not is_instance_valid(player):
@@ -188,6 +228,11 @@ func _physics_process(delta: float) -> void:
 		var dist_to_player := global_position.distance_to(player.global_position)
 		var ready_to_attack: bool = agent.is_navigation_finished() and dist_to_player <= stop_distance
 		if ready_to_attack:
+			# Face the player before the swing so hitbox is on the correct side
+			var dx := player.global_position.x - global_position.x
+			if abs(dx) > 0.01:
+				_set_facing_sign(-1 if dx < 0 else 1)
+
 			agent.target_position = global_position
 			is_attacking = true
 			hit_this_swing = false
@@ -216,8 +261,9 @@ func _physics_process(delta: float) -> void:
 
 	if dir.length_squared() > 0.0001:
 		_play("walk")
-		if sprite:
-			sprite.flip_h = dir.x < 0
+		# decide facing from horizontal intent if any
+		if abs(dir.x) > 0.01:
+			_set_facing_sign(-1 if dir.x < 0 else 1)
 	else:
 		_play("idle")
 
@@ -251,31 +297,57 @@ func start_attack() -> void:
 	if sprite and not sprite.animation_finished.is_connected(_on_attack_finished):
 		sprite.animation_finished.connect(_on_attack_finished, CONNECT_ONE_SHOT)
 
-func take_damage(amount: int) -> void:
+# --- CHANGED: now supports (amount, from_pos, knock) with defaults for compatibility ---
+func take_damage(amount: int, from_pos: Vector2 = Vector2.ZERO, knock: float = 0.0) -> void:
 	if is_dead:
 		return
+	if i_frames > 0.0:
+		return
+	i_frames = i_frames_time
+
+	health = max(0, health - amount)
+	_update_health_bar()
+
+	# Knockback (reduced by resist)
+	var k: float = knock * (1.0 - clamp(knockback_resist, 0.0, 1.0))
+	if k > 0.0:
+		var dir := (global_position - from_pos).normalized()
+		velocity = dir * k
+
 	_play("hurt")
 	hurt_lock = true
 	if sprite and not sprite.animation_finished.is_connected(_on_hurt_finished):
 		sprite.animation_finished.connect(_on_hurt_finished, CONNECT_ONE_SHOT)
 
+	if health <= 0:
+		_die()
+
 func _on_hurt_finished() -> void:
 	hurt_lock = false
 
-func die() -> void:
+# --- NEW: death flow separated so we can await anim then free ---
+func _die() -> void:
 	if is_dead:
 		return
 	is_dead = true
 	velocity = Vector2.ZERO
 	agent.target_position = global_position
-	attack_hitbox.monitoring = false
-	attack_hitbox.set_meta("active", false)
+	if attack_hitbox:
+		attack_hitbox.monitoring = false
+		attack_hitbox.set_meta("active", false)
 	_play("dead")
 	if sprite and not sprite.animation_finished.is_connected(_on_dead_anim_finished):
 		sprite.animation_finished.connect(_on_dead_anim_finished, CONNECT_ONE_SHOT)
+	else:
+		_on_dead_anim_finished()
 
 func _on_dead_anim_finished() -> void:
 	queue_free()
+# ---------------------------------------------------------------
+
+func die() -> void:
+	# kept for compatibility if you call die() elsewhere; forwards to _die()
+	_die()
 
 func _play(anim: String) -> void:
 	if not sprite:
@@ -307,7 +379,7 @@ func _play(anim: String) -> void:
 
 func on_player_respawned(p: Node2D) -> void:
 	player = p
-	is_attacking = false                 # << prevent being stuck in attack lock
+	is_attacking = false                 # prevent being stuck in attack lock
 	hurt_lock = false
 	if attack_hitbox:
 		attack_hitbox.monitoring = false
@@ -317,8 +389,7 @@ func on_player_respawned(p: Node2D) -> void:
 	_repath_accum = 0.0
 	agent.target_position = p.global_position
 
-	_force_aggro_check()                 # << if you respawn inside the zone, this re-arms aggro
-
+	_force_aggro_check()                 # if you respawn inside the zone, this re-arms aggro
 
 func _force_aggro_check() -> void:
 	_try_get_player()
@@ -337,3 +408,12 @@ func _force_aggro_check() -> void:
 		if not aggro:
 			print("[CZ] force aggro via distance")
 		aggro = true
+
+# --- NEW: tiny helper for optional HealthBar ---
+func _update_health_bar() -> void:
+	if not is_instance_valid(health_bar):
+		return
+	if "max_value" in health_bar:
+		health_bar.max_value = max_health
+	if "value" in health_bar:
+		health_bar.value = health

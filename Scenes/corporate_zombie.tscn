@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://dlgksmsk1hpoa"]
+[gd_scene load_steps=42 format=3 uid="uid://dlgksmsk1hpoa"]
 
 [ext_resource type="Script" uid="uid://c0sgx1on1cqxu" path="res://scripts/characters/Enemy/CorporateZombie.gd" id="1_fgw1b"]
 [ext_resource type="Texture2D" uid="uid://cnpghowf20brt" path="res://assets/sprites/enemies/corporatezombie/Attack.png" id="1_k2fh2"]
@@ -173,7 +173,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2i6bi")
 }],
-"loop": true,
+"loop": false,
 "name": &"dead",
 "speed": 8.0
 }, {
@@ -195,7 +195,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4xdvv")
 }],
-"loop": true,
+"loop": false,
 "name": &"hurt",
 "speed": 11.0
 }, {
@@ -259,10 +259,16 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bor6v"]
-radius = 18.3526
-height = 36.7053
+radius = 10.6037
+height = 98.6549
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_odjsi"]
+radius = 16.0
+height = 66.0
 
 [node name="CorporateZombie" type="CharacterBody2D"]
+collision_layer = 5
+collision_mask = 5
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_fgw1b")
@@ -290,15 +296,24 @@ position = Vector2(-2, -42)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visuals"]
 sprite_frames = SubResource("SpriteFrames_w2mnk")
-animation = &"attack"
-frame = 4
-frame_progress = 1.0
+animation = &"dead"
 
 [node name="AttackHitbox" type="Area2D" parent="." groups=["enemy_attack"]]
-collision_layer = 5
 collision_mask = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
-position = Vector2(11, -23)
+position = Vector2(-5, -9)
 rotation = 0.844516
 shape = SubResource("CapsuleShape2D_bor6v")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="AttackHitbox"]
+position = Vector2(-5, -10)
+rotation = -0.92677
+shape = SubResource("CapsuleShape2D_bor6v")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 9
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(-1, -10)
+shape = SubResource("CapsuleShape2D_odjsi")

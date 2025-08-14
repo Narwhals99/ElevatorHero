@@ -74,6 +74,7 @@ lunge={
 [layer_names]
 
 2d_physics/layer_3="playerhurt"
+2d_physics/layer_4="zombiehurtbox"
 2d_physics/layer_5="Walls"
 2d_physics/layer_20="furniture"
 
