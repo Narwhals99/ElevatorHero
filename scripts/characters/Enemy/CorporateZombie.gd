@@ -20,7 +20,7 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = null
 @onready var attack_hitbox: Area2D = $AttackHitbox
 @onready var level_root := get_tree().current_scene
-@onready var health_bar: Node = $HealthBar	# NEW: optional (TextureProgressBar/ProgressBar)
+@onready var health_bar: Node = get_node_or_null("HealthBar")
 
 const CORNER_EPS := 2.0
 
