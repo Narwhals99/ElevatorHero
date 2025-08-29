@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3x071yxwfdt0"]
+
+[ext_resource type="Texture2D" uid="uid://cfaavomvkparj" path="res://assets/ChatGPT Image Aug 29, 2025, 02_14_03 PM.png" id="1_hbjfj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1og7h"]
+atlas = ExtResource("1_hbjfj")
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 401.0
+offset_bottom = 289.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
+position = Vector2(201, 134)
+scale = Vector2(0.23291, 0.193848)
+texture = SubResource("AtlasTexture_1og7h")
+
+[node name="Button" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 141.0
+offset_top = 97.0
+offset_right = 188.0
+offset_bottom = 125.0
+
+[node name="Button2" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 213.0
+offset_top = 98.0
+offset_right = 256.0
+offset_bottom = 125.0
+
+[node name="Button3" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 138.0
+offset_top = 138.0
+offset_right = 189.0
+offset_bottom = 168.0
+
+[node name="Button4" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 139.0
+offset_right = 261.0
+offset_bottom = 168.0
+
+[node name="Button5" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 139.0
+offset_top = 178.0
+offset_right = 188.0
+offset_bottom = 208.0
+
+[node name="Button6" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 179.0
+offset_right = 261.0
+offset_bottom = 207.0
+
+[node name="Button7" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 274.0
+offset_top = 52.0
+offset_right = 285.0
+offset_bottom = 63.0
