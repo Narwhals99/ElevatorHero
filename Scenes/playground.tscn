@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=25 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
 [ext_resource type="PackedScene" uid="uid://dlgksmsk1hpoa" path="res://scenes/corporate_zombie.tscn" id="8_2q4k0"]
 [ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scenes/playground_npc.tscn" id="8_mrac1"]
+[ext_resource type="Texture2D" uid="uid://bbjaxom88d6vt" path="res://griffin/assets/tilesets/Office Tileset All 32x32 griffin.png" id="8_x1amm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qchbg"]
 texture = ExtResource("2_kddj0")
@@ -1860,6 +1861,131 @@ vertices = PackedVector2Array(264, -381, 312, -383, 404, -383, 404, -306, 316, -
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4, 5), PackedInt32Array(1, 0, 6, 7), PackedInt32Array(8, 9, 10, 11), PackedInt32Array(9, 8, 12), PackedInt32Array(13, 14, 7, 6), PackedInt32Array(4, 15, 16, 5), PackedInt32Array(10, 0, 5, 17), PackedInt32Array(11, 10, 17, 18, 19), PackedInt32Array(20, 8, 11, 21, 22), PackedInt32Array(15, 23, 24, 25), PackedInt32Array(16, 15, 25), PackedInt32Array(18, 16, 25), PackedInt32Array(19, 18, 25), PackedInt32Array(26, 19, 25, 27, 28), PackedInt32Array(21, 26, 28, 29, 22), PackedInt32Array(30, 31, 22, 29), PackedInt32Array(20, 22, 32, 33), PackedInt32Array(32, 34, 35, 13, 33), PackedInt32Array(12, 33, 13), PackedInt32Array(9, 12, 13, 6)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-190, -478, 414, -478, 414, -146, -190, -146), PackedVector2Array(-100, -441, -188, -442, -188, -385, -98, -385), PackedVector2Array(60, -443, -27, -442, -28, -394, 62, -393), PackedVector2Array(254, -443, 163, -443, 163, -391, 254, -391), PackedVector2Array(406, -439, 322, -439, 322, -393, 409, -393), PackedVector2Array(-100, -298, -187, -299, -187, -245, -100, -247), PackedVector2Array(63, -299, -29, -299, -29, -248, 62, -248), PackedVector2Array(254, -299, 164, -299, 164, -248, 254, -248), PackedVector2Array(408, -296, 326, -296, 326, -248, 408, -248)])
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2bfhc"]
+texture = ExtResource("8_x1amm")
+16:28/0 = 0
+17:28/0 = 0
+18:28/0 = 0
+19:28/0 = 0
+20:28/0 = 0
+21:28/0 = 0
+22:28/0 = 0
+23:28/0 = 0
+24:28/0 = 0
+25:28/0 = 0
+26:28/0 = 0
+27:28/0 = 0
+28:28/0 = 0
+28:29/0 = 0
+27:29/0 = 0
+26:29/0 = 0
+25:29/0 = 0
+24:29/0 = 0
+23:29/0 = 0
+22:29/0 = 0
+21:29/0 = 0
+20:29/0 = 0
+19:29/0 = 0
+18:29/0 = 0
+17:29/0 = 0
+16:29/0 = 0
+16:30/0 = 0
+17:30/0 = 0
+18:30/0 = 0
+19:30/0 = 0
+20:30/0 = 0
+21:30/0 = 0
+22:30/0 = 0
+23:30/0 = 0
+24:30/0 = 0
+25:30/0 = 0
+28:30/0 = 0
+27:30/0 = 0
+26:30/0 = 0
+26:31/0 = 0
+27:31/0 = 0
+28:31/0 = 0
+25:31/0 = 0
+24:31/0 = 0
+23:31/0 = 0
+22:31/0 = 0
+21:31/0 = 0
+20:31/0 = 0
+19:31/0 = 0
+18:31/0 = 0
+17:31/0 = 0
+16:31/0 = 0
+15:31/0 = 0
+29:30/0 = 0
+29:29/0 = 0
+29:28/0 = 0
+29:31/0 = 0
+31:31/0 = 0
+30:30/0 = 0
+30:29/0 = 0
+30:28/0 = 0
+31:29/0 = 0
+31:30/0 = 0
+30:31/0 = 0
+31:28/0 = 0
+4:25/0 = 0
+5:25/0 = 0
+6:25/0 = 0
+7:25/0 = 0
+7:24/0 = 0
+7:23/0 = 0
+6:23/0 = 0
+6:22/0 = 0
+6:21/0 = 0
+6:20/0 = 0
+7:20/0 = 0
+7:21/0 = 0
+7:22/0 = 0
+5:20/0 = 0
+5:21/0 = 0
+4:21/0 = 0
+4:22/0 = 0
+4:23/0 = 0
+5:23/0 = 0
+5:24/0 = 0
+6:24/0 = 0
+5:22/0 = 0
+4:24/0 = 0
+4:20/0 = 0
+14:31/0 = 0
+13:31/0 = 0
+12:31/0 = 0
+12:30/0 = 0
+12:29/0 = 0
+12:28/0 = 0
+12:27/0 = 0
+12:26/0 = 0
+13:26/0 = 0
+14:26/0 = 0
+15:26/0 = 0
+15:27/0 = 0
+15:28/0 = 0
+15:29/0 = 0
+15:30/0 = 0
+14:30/0 = 0
+13:30/0 = 0
+13:29/0 = 0
+13:28/0 = 0
+13:27/0 = 0
+14:27/0 = 0
+14:28/0 = 0
+14:29/0 = 0
+28:49/0 = 0
+28:50/0 = 0
+29:50/0 = 0
+29:49/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_osidk"]
+sources/0 = SubResource("TileSetAtlasSource_2bfhc")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mrac1"]
+size = Vector2(73, 16)
+
 [node name="playground" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_emj6c")
@@ -1934,31 +2060,48 @@ tile_map_data = PackedByteArray("AAD0/9z/AAAEABoAAAD0/93/AAAEABsAAAD0/97/AAAEABw
 tile_set = SubResource("TileSet_2q4k0")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_2q4k0")
 
 [node name="SpawnPoint" type="Node2D" parent="."]
 position = Vector2(48, 147)
 
 [node name="CorporateZombie2" parent="." instance=ExtResource("8_2q4k0")]
+visible = false
 position = Vector2(11, -357)
 scale = Vector2(0.493006, 0.50356)
 
 [node name="CorporateZombie" parent="." instance=ExtResource("8_2q4k0")]
+visible = false
 position = Vector2(110, -423)
 scale = Vector2(0.507979, 0.539978)
 
 [node name="CorporateZombie3" parent="." instance=ExtResource("8_2q4k0")]
+visible = false
 position = Vector2(208, -358)
 scale = Vector2(0.561408, 0.543631)
 
 [node name="CorporateZombie4" parent="." instance=ExtResource("8_2q4k0")]
+visible = false
 position = Vector2(-146, -360)
 scale = Vector2(0.590021, 0.504439)
 
 [node name="CorporateZombie5" parent="." instance=ExtResource("8_2q4k0")]
+visible = false
 position = Vector2(363, -369)
 scale = Vector2(0.538054, 0.497868)
 
 [node name="CorporateZombie6" parent="." instance=ExtResource("8_2q4k0")]
+visible = false
 position = Vector2(124, -368)
 scale = Vector2(0.613629, 0.623792)
+
+[node name="elevatorlobbydoor" type="Area2D" parent="."]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="elevatorlobbydoor"]
+tile_map_data = PackedByteArray("AAAGAAoAAAAcAB0AAFAGAAsAAAAdAB0AAFAHAAoAAAAcAB0AAFAHAAsAAAAdAB0AAFAIAAoAAAAcAB0AAFAIAAsAAAAdAB0AAFAJAAoAAAAcADEAAAAKAAoAAAAdADEAAAA=")
+tile_set = SubResource("TileSet_osidk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="elevatorlobbydoor"]
+position = Vector2(130.5, 173)
+shape = SubResource("RectangleShape2D_mrac1")
