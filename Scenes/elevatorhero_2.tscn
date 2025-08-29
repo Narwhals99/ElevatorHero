@@ -771,13 +771,12 @@ hb_off_right = Vector2(-27, 15)
 hb_rot_down_deg = 0.0
 hb_rot_up_deg = 0.0
 hb_rot_right_deg = 180.0
+attack_damage = 3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-28, 9)
 sprite_frames = SubResource("SpriteFrames_m8ow3")
-animation = &"attack_right"
-frame = 7
-frame_progress = 1.0
+animation = &"run_right"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-26, 23)

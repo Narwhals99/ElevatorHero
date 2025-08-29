@@ -1,0 +1,161 @@
+[gd_scene load_steps=21 format=3 uid="uid://bgh40hsokvaeo"]
+
+[ext_resource type="Texture2D" uid="uid://b5r70prk5pumv" path="res://assets/sprites/enemies/Evil_Printer.png" id="1_bijm8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_581gn"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_83vjw"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rty4o"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(64, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cjftf"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g7qqi"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(192, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_orxsl"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qmfso"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fpeoq"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(128, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0eow"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(192, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hu360"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iuy4y"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0oea3"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1bqai"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ujeea"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_acmc8"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_28t06"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqpvs"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwhxn"]
+atlas = ExtResource("1_bijm8")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7wgtn"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_581gn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_83vjw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rty4o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cjftf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g7qqi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_orxsl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qmfso")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fpeoq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q0eow")
+}],
+"loop": true,
+"name": &"shimmy_left",
+"speed": 13.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hu360")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iuy4y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0oea3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1bqai")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ujeea")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_acmc8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_28t06")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqpvs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwhxn")
+}],
+"loop": false,
+"name": &"spit_left",
+"speed": 18.0
+}]
+
+[node name="EvilPrinter" type="CharacterBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(202, 135)
+sprite_frames = SubResource("SpriteFrames_7wgtn")
+animation = &"spit_left"
+frame = 8
+frame_progress = 1.0

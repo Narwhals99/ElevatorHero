@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=4 uid="uid://dp6s3dxeh54ve"]
+[gd_scene load_steps=14 format=4 uid="uid://dp6s3dxeh54ve"]
 
 [ext_resource type="Texture2D" uid="uid://bbjaxom88d6vt" path="res://griffin/assets/tilesets/Office Tileset All 32x32 griffin.png" id="1_i5s10"]
 [ext_resource type="Script" uid="uid://beh8nj82b3crs" path="res://scripts/Door.gd" id="2_sos3q"]
@@ -4133,6 +4133,16 @@ texture = ExtResource("1_i5s10")
 [sub_resource type="TileSet" id="TileSet_ut7em"]
 sources/0 = SubResource("TileSetAtlasSource_wrtbw")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dnygt"]
+texture = ExtResource("1_i5s10")
+28:49/0 = 0
+29:49/0 = 0
+29:50/0 = 0
+28:50/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_mmep2"]
+sources/0 = SubResource("TileSetAtlasSource_dnygt")
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mmep2"]
 texture = ExtResource("1_i5s10")
 16:28/0 = 0
@@ -6214,6 +6224,9 @@ sources/1 = SubResource("TileSetAtlasSource_mmep2")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i5s10"]
 size = Vector2(19.7135, 111.418)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sos3q"]
+size = Vector2(29.5, 23)
+
 [node name="Elevator" type="Node2D"]
 
 [node name="Control" type="Control" parent="."]
@@ -6234,6 +6247,8 @@ tile_map_data = PackedByteArray("AAAKAAcAAAAIABQAAAAKAAgAAAAIABUAAAALAAcAAAAJABQ
 tile_set = SubResource("TileSet_ut7em")
 
 [node name="panel" type="TileMapLayer" parent="Control/elevatorart"]
+tile_map_data = PackedByteArray("AAAKAAsAAAAcADEAAAAKAAwAAAAcADIAAAALAAsAAAAdADEAAAALAAwAAAAdADIAAAA=")
+tile_set = SubResource("TileSet_mmep2")
 
 [node name="elevatordoor" type="Area2D" parent="."]
 script = ExtResource("2_sos3q")
@@ -6251,3 +6266,13 @@ shape = SubResource("RectangleShape2D_i5s10")
 
 [node name="PlaygroundSpawn" type="Marker2D" parent="."]
 position = Vector2(217, 124)
+
+[node name="ElevatorInterior" type="Area2D" parent="."]
+position = Vector2(148, 135)
+script = ExtResource("2_sos3q")
+door_action = "open_keypad"
+interior_area_path = NodePath(".")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ElevatorInterior"]
+position = Vector2(27.25, 44.5)
+shape = SubResource("RectangleShape2D_sos3q")

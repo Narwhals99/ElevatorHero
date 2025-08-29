@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=27 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dlgksmsk1hpoa" path="res://scenes/corporate_zombie.tscn" id="8_2q4k0"]
 [ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scenes/playground_npc.tscn" id="8_mrac1"]
 [ext_resource type="Texture2D" uid="uid://bbjaxom88d6vt" path="res://griffin/assets/tilesets/Office Tileset All 32x32 griffin.png" id="8_x1amm"]
+[ext_resource type="Script" uid="uid://dcjrsvfcmyo6x" path="res://scripts/global/EnemyManager.gd" id="10_x1amm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qchbg"]
 texture = ExtResource("2_kddj0")
@@ -2106,3 +2107,7 @@ position = Vector2(128, 140)
 
 [node name="SpawnPoint" type="Marker2D" parent="."]
 position = Vector2(39, 119)
+
+[node name="EnemyManager" type="Node" parent="."]
+script = ExtResource("10_x1amm")
+level_key = "playground"

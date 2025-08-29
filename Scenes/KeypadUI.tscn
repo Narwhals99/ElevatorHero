@@ -1,66 +1,68 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3x071yxwfdt0"]
+[gd_scene load_steps=5 format=3 uid="uid://c3x071yxwfdt0"]
 
+[ext_resource type="Script" uid="uid://cjweo61aicqwv" path="res://scripts/global/KeypadUI.gd" id="1_1og7h"]
 [ext_resource type="Texture2D" uid="uid://cfaavomvkparj" path="res://assets/ChatGPT Image Aug 29, 2025, 02_14_03 PM.png" id="1_hbjfj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1og7h"]
 atlas = ExtResource("1_hbjfj")
 
-[node name="CanvasLayer" type="CanvasLayer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1og7h"]
+bg_color = Color(1, 0.478431, 0, 0.321569)
 
-[node name="Control" type="Control" parent="."]
+[node name="KeypadUI" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 401.0
-offset_bottom = 289.0
+script = ExtResource("1_1og7h")
 
-[node name="Sprite2D" type="Sprite2D" parent="Control"]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(201, 134)
 scale = Vector2(0.23291, 0.193848)
 texture = SubResource("AtlasTexture_1og7h")
 
-[node name="Button" type="Button" parent="Control"]
+[node name="Floor1Btn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 141.0
 offset_top = 97.0
 offset_right = 188.0
 offset_bottom = 125.0
+theme_override_styles/hover = SubResource("StyleBoxFlat_1og7h")
 
-[node name="Button2" type="Button" parent="Control"]
+[node name="Floor2Btn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 213.0
 offset_top = 98.0
 offset_right = 256.0
 offset_bottom = 125.0
 
-[node name="Button3" type="Button" parent="Control"]
+[node name="Floor3Btn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 138.0
 offset_top = 138.0
 offset_right = 189.0
 offset_bottom = 168.0
 
-[node name="Button4" type="Button" parent="Control"]
+[node name="Floor4Btn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 211.0
 offset_top = 139.0
 offset_right = 261.0
 offset_bottom = 168.0
 
-[node name="Button5" type="Button" parent="Control"]
+[node name="Floor5Btn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 139.0
 offset_top = 178.0
 offset_right = 188.0
 offset_bottom = 208.0
 
-[node name="Button6" type="Button" parent="Control"]
+[node name="Floor6Btn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 211.0
 offset_top = 179.0
 offset_right = 261.0
 offset_bottom = 207.0
 
-[node name="Button7" type="Button" parent="Control"]
+[node name="CloseBtn" type="Button" parent="."]
 layout_mode = 0
 offset_left = 274.0
 offset_top = 52.0

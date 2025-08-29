@@ -3,6 +3,7 @@ extends Node2D
 
 @onready var level_root: Node = $level_root
 @onready var ui: CanvasLayer = $ui
+@onready var elevator_keypad_ui: ElevatorKeypadUI = $ui/KeypadUI   # <-- typed keypad node (must have KeypadUI.gd attached)
 
 # Assign your player PackedScene (e.g., elevatorhero_2.tscn) in the Inspector
 @export var player_scene: PackedScene
@@ -21,17 +22,25 @@ const MENU_SCENE := "res://scenes/mainmenu.tscn"   # <-- your real menu .tscn
 const LEVELS: Dictionary = {
 	"playground": "res://scenes/playground.tscn",   # <-- your real level paths
 	"elevator":   "res://griffin/scenes/elevator.tscn",
+	"floor2":     "res://scenes/floor2.tscn"
 }
 const DEFAULT_START_LEVEL := "playground"
 const DEFAULT_START_SPAWN := "SpawnPoint"
 # ----------------------------------
 
-func _ready() -> void:
+func _enter_tree() -> void:
+	# Make sure Door.gd can find this node via the 'level_manager' group
 	add_to_group("level_manager")
+
+func _ready() -> void:
 	_show_main_menu()
 
 # ===================== MENU FLOW =====================
 func _show_main_menu() -> void:
+	RunState.clear_all()   # ← reset killed enemies for a fresh run
+	_unload_level()
+	# ...rest of your code...
+
 	_unload_level()
 
 	# Hide in-game UI overlays so they can't cover the menu
@@ -204,3 +213,36 @@ func respawn_player() -> void:
 			if player.has_variable("respawn_i_frames"): player.i_frames = player.respawn_i_frames
 			if player.has_variable("controls_locked"): player.controls_locked = false
 			if player.has_variable("attacking"): player.attacking = false
+
+# ================== ELEVATOR KEYPAD GLUE ==================
+func open_keypad() -> void:
+	# Called by Door.gd (panel) via 'level_manager' group
+	# Lock basic processing while keypad is open
+	if player:
+		player.set_physics_process(false)
+		player.set_process(false)
+
+	if elevator_keypad_ui:
+		if not elevator_keypad_ui.is_connected("floor_selected", Callable(self, "_on_keypad_floor_selected")):
+			elevator_keypad_ui.connect("floor_selected", Callable(self, "_on_keypad_floor_selected"))
+		if not elevator_keypad_ui.is_connected("closed", Callable(self, "_on_keypad_closed")):
+			elevator_keypad_ui.connect("closed", Callable(self, "_on_keypad_closed"))
+		elevator_keypad_ui.open_ui(current_level_key)
+	else:
+		push_warning("[Main] KeypadUI node missing at $ui/KeypadUI or script not attached")
+
+func _on_keypad_closed() -> void:
+	_unlock_controls()
+
+func _on_keypad_floor_selected(level_key: String) -> void:
+	if level_key != current_level_key:
+		# Use your spawn node name for arriving via elevator
+		load_level(level_key, "PlaygroundSpawn")
+	_unlock_controls()
+
+func _unlock_controls() -> void:
+	if player:
+		player.set_physics_process(true)
+		player.set_process(true)
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+# =========================================================
