@@ -417,3 +417,4 @@ func _update_health_bar() -> void:
 		health_bar.max_value = max_health
 	if "value" in health_bar:
 		health_bar.value = health
+#penis
