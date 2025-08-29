@@ -54,6 +54,7 @@ var attacking := false
 var _swing_id: int = 0
 var _hit_areas := {}     # area_id -> swing_id
 var _hit_bodies := {}    # body_id -> swing_id
+
 # -------------------------------------------------
 
 func _ready() -> void:
@@ -318,7 +319,9 @@ func _die() -> void:
 	if anim and anim.sprite_frames and anim.sprite_frames.has_animation("dead_" + last_dir):
 		anim.play("dead_" + last_dir)
 		await anim.animation_finished
-	_respawn()
+	# hand off to Main.gd (uses checkpoint/spawn correctly)
+	get_tree().call_group("level_manager", "respawn_player")
+
 
 # --- Attack hitbox callbacks + helper ---
 func _on_attack_area_entered(other_area: Area2D) -> void:

@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=4 uid="uid://ja34wxf0nagi"]
+[gd_scene load_steps=26 format=4 uid="uid://ja34wxf0nagi"]
 
 [ext_resource type="Script" uid="uid://c5kxu6wsh73ow" path="res://scripts/playground/playground.gd" id="1_emj6c"]
 [ext_resource type="Texture2D" uid="uid://2t64ceijd3a0" path="res://assets/tilesets/buildingplayground/1.png" id="1_q8s1k"]
 [ext_resource type="Texture2D" uid="uid://mra3k3807tlr" path="res://assets/tilesets/buildingplayground/Office Tileset All 32x32.png" id="2_kddj0"]
 [ext_resource type="Texture2D" uid="uid://w0pbd0jgjbho" path="res://assets/tilesets/buildingplayground/Buildings - High Lights 1.png" id="2_mm0a5"]
 [ext_resource type="Script" uid="uid://cy46qtnl6pakv" path="res://scripts/playground/playground_parallax.gd" id="3_mm0a5"]
+[ext_resource type="Script" uid="uid://beh8nj82b3crs" path="res://scripts/Door.gd" id="8_2bfhc"]
 [ext_resource type="PackedScene" uid="uid://dlgksmsk1hpoa" path="res://scenes/corporate_zombie.tscn" id="8_2q4k0"]
 [ext_resource type="PackedScene" uid="uid://dlqyq6ck2ob7" path="res://scenes/playground_npc.tscn" id="8_mrac1"]
 [ext_resource type="Texture2D" uid="uid://bbjaxom88d6vt" path="res://griffin/assets/tilesets/Office Tileset All 32x32 griffin.png" id="8_x1amm"]
@@ -2063,40 +2064,34 @@ tile_set = SubResource("TileSet_2q4k0")
 visible = false
 navigation_polygon = SubResource("NavigationPolygon_2q4k0")
 
-[node name="SpawnPoint" type="Node2D" parent="."]
-position = Vector2(48, 147)
-
 [node name="CorporateZombie2" parent="." instance=ExtResource("8_2q4k0")]
-visible = false
 position = Vector2(11, -357)
 scale = Vector2(0.493006, 0.50356)
 
 [node name="CorporateZombie" parent="." instance=ExtResource("8_2q4k0")]
-visible = false
 position = Vector2(110, -423)
 scale = Vector2(0.507979, 0.539978)
 
 [node name="CorporateZombie3" parent="." instance=ExtResource("8_2q4k0")]
-visible = false
 position = Vector2(208, -358)
 scale = Vector2(0.561408, 0.543631)
 
 [node name="CorporateZombie4" parent="." instance=ExtResource("8_2q4k0")]
-visible = false
 position = Vector2(-146, -360)
 scale = Vector2(0.590021, 0.504439)
 
 [node name="CorporateZombie5" parent="." instance=ExtResource("8_2q4k0")]
-visible = false
 position = Vector2(363, -369)
 scale = Vector2(0.538054, 0.497868)
 
 [node name="CorporateZombie6" parent="." instance=ExtResource("8_2q4k0")]
-visible = false
 position = Vector2(124, -368)
 scale = Vector2(0.613629, 0.623792)
 
 [node name="elevatorlobbydoor" type="Area2D" parent="."]
+script = ExtResource("8_2bfhc")
+target_level_key = "elevator"
+target_spawn_name = "PlaygroundSpawn"
 
 [node name="TileMapLayer" type="TileMapLayer" parent="elevatorlobbydoor"]
 tile_map_data = PackedByteArray("AAAGAAoAAAAcAB0AAFAGAAsAAAAdAB0AAFAHAAoAAAAcAB0AAFAHAAsAAAAdAB0AAFAIAAoAAAAcAB0AAFAIAAsAAAAdAB0AAFAJAAoAAAAcADEAAAAKAAoAAAAdADEAAAA=")
@@ -2105,3 +2100,9 @@ tile_set = SubResource("TileSet_osidk")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="elevatorlobbydoor"]
 position = Vector2(130.5, 173)
 shape = SubResource("RectangleShape2D_mrac1")
+
+[node name="ElevatorSpawn" type="Node2D" parent="."]
+position = Vector2(128, 140)
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(39, 119)

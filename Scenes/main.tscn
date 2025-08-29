@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://blrrni2w5qcun" path="res://scenes/dialoguebox.tscn" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://bk6kadoji6ea7" path="res://scenes/pausemenu.tscn" id="3_jyhfs"]
 
-[node name="Game" type="Node2D" groups=["game_root"]]
+[node name="Game" type="Node2D" groups=["level_root"]]
 script = ExtResource("1_o5qli")
 player_scene = ExtResource("2_jyhfs")
 

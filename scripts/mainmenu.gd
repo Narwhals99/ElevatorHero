@@ -1,24 +1,26 @@
-# mainmenu.gd (on your menu root Control)
+# mainmenu.gd (Godot 4) — attach to your menu scene root (Control)
 extends Control
+
 signal start_game_requested(level_id: String)
 signal quit_requested
 
-@onready var play_btn: Button = $play_button
-@onready var quit_btn: Button = $quit_button
+@onready var play_button: Button = $play_button
+@onready var quit_button: Button = $quit_button
+
+# Optional: choose a default level key to start
+@export var default_level_key: String = "playground"
 
 func _ready() -> void:
-	# Force connections in code so we don't rely on editor wiring
-	if not play_btn.pressed.is_connected(_on_play_pressed):
-		play_btn.pressed.connect(_on_play_pressed)
-	if not quit_btn.pressed.is_connected(_on_quit_pressed):
-		quit_btn.pressed.connect(_on_quit_pressed)
-	print("[menu] play connected:", play_btn.pressed.is_connected(_on_play_pressed),
-		  " quit connected:", quit_btn.pressed.is_connected(_on_quit_pressed))
+	# Ensure full rect
+	set_anchors_preset(Control.PRESET_FULL_RECT)
+
+	if play_button and not play_button.is_connected("pressed", Callable(self, "_on_play_pressed")):
+		play_button.connect("pressed", Callable(self, "_on_play_pressed"))
+	if quit_button and not quit_button.is_connected("pressed", Callable(self, "_on_quit_pressed")):
+		quit_button.connect("pressed", Callable(self, "_on_quit_pressed"))
 
 func _on_play_pressed() -> void:
-	print("[menu] Play pressed")
-	emit_signal("start_game_requested", "playground")
+	emit_signal("start_game_requested", default_level_key)
 
 func _on_quit_pressed() -> void:
-	print("[menu] Quit pressed")
 	emit_signal("quit_requested")

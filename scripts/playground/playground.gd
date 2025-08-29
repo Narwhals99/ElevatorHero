@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var spawn_point: Node2D = $SpawnPoint
+@onready var spawn_point: Node2D = $ElevatorSpawn
 @onready var pause_menu = get_tree().get_first_node_in_group("pause_ui")
 
 func _ready() -> void:
