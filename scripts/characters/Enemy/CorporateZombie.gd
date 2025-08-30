@@ -1,6 +1,8 @@
 extends CharacterBody2D
 # Godot 4.x
 
+signal died   # ← tell EnemyManager a REAL death happened
+
 # ---- Tunables ----
 @export var speed: float = 70.0
 @export var stop_distance: float = 15.0
@@ -94,7 +96,6 @@ func _ready() -> void:
 	# Cache the default local position of the hitbox so we can mirror it
 	if is_instance_valid(attack_hitbox):
 		_hitbox_base_pos = attack_hitbox.position
-		# Ensure it starts on the "right" by default (facing_sign = 1)
 		attack_hitbox.position = _hitbox_base_pos
 
 	# --- NEW: init health + bar ---
@@ -115,7 +116,6 @@ func _try_get_player() -> void:
 func _sync_aggro_mask_to_player() -> void:
 	if not aggro_area:
 		return
-	# If player exists and is a physics body, ensure AggroArea can see it
 	if is_instance_valid(player) and player is PhysicsBody2D:
 		var p_layer := (player as PhysicsBody2D).collision_layer
 		if p_layer != 0:
@@ -135,10 +135,10 @@ func _on_aggro_enter(body: Node) -> void:
 	if is_dead:
 		return
 	if body.is_in_group("player"):
-		player = body as Node2D			# ensure we chase the CURRENT instance
+		player = body as Node2D
 		aggro = true
 		agent.target_position = player.global_position
-		_repath_accum = repath_interval	# force an immediate repath this frame
+		_repath_accum = repath_interval
 
 func _on_aggro_exit(body: Node) -> void:
 	if is_dead:
@@ -150,21 +150,17 @@ func _on_aggro_exit(body: Node) -> void:
 		velocity = Vector2.ZERO
 		_play("idle")
 
-# --- NEW: central facing+mirror helper ---
 func _set_facing_sign(sign: int) -> void:
-	# pythonic ternary in GDScript 4
 	sign = -1 if sign < 0 else 1
 	if sign == _facing_sign:
 		return
 	_facing_sign = sign
-	# Flip sprite and mirror hitbox
 	if sprite:
 		sprite.flip_h = (_facing_sign == -1)
 	if is_instance_valid(attack_hitbox):
 		attack_hitbox.position = Vector2(_hitbox_base_pos.x * _facing_sign, _hitbox_base_pos.y)
 
 func _physics_process(delta: float) -> void:
-	# --- NEW: ticks/locks ---
 	if attack_cooldown > 0.0:
 		attack_cooldown = max(0.0, attack_cooldown - delta)
 
@@ -175,9 +171,7 @@ func _physics_process(delta: float) -> void:
 
 	if i_frames > 0.0:
 		i_frames = max(0.0, i_frames - delta)
-	# ------------------------
 
-	# Reacquire player if lost; also keep mask in sync
 	if player == null or not is_instance_valid(player):
 		_try_get_player()
 		_sync_aggro_mask_to_player()
@@ -185,18 +179,15 @@ func _physics_process(delta: float) -> void:
 			agent.target_position = player.global_position
 			_repath_accum = repath_interval
 
-	# Safety: keep hitbox cold when not attacking
 	if not is_attacking and attack_hitbox and attack_hitbox.monitoring:
 		attack_hitbox.monitoring = false
 		attack_hitbox.set_meta("active", false)
 
-	# Periodic aggro wake-up (in case signals didn't fire)
 	_aggro_scan_accum += delta
 	if _aggro_scan_accum >= 0.2:
 		_aggro_scan_accum = 0.0
 		_force_aggro_check()
 
-	# Attack lock
 	if is_attacking:
 		agent.target_position = global_position
 		velocity = Vector2.ZERO
@@ -223,12 +214,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		agent.target_position = global_position
 
-	# --- Attack gate ---
 	if aggro and is_instance_valid(player) and attack_cooldown <= 0.0:
 		var dist_to_player := global_position.distance_to(player.global_position)
 		var ready_to_attack: bool = agent.is_navigation_finished() and dist_to_player <= stop_distance
 		if ready_to_attack:
-			# Face the player before the swing so hitbox is on the correct side
 			var dx := player.global_position.x - global_position.x
 			if abs(dx) > 0.01:
 				_set_facing_sign(-1 if dx < 0 else 1)
@@ -255,13 +244,11 @@ func _physics_process(delta: float) -> void:
 			move_and_slide()
 			return
 
-	# --- Move & animate ---
 	velocity = dir * speed
 	move_and_slide()
 
 	if dir.length_squared() > 0.0001:
 		_play("walk")
-		# decide facing from horizontal intent if any
 		if abs(dir.x) > 0.01:
 			_set_facing_sign(-1 if dir.x < 0 else 1)
 	else:
@@ -308,7 +295,6 @@ func take_damage(amount: int, from_pos: Vector2 = Vector2.ZERO, knock: float = 0
 	health = max(0, health - amount)
 	_update_health_bar()
 
-	# Knockback (reduced by resist)
 	var k: float = knock * (1.0 - clamp(knockback_resist, 0.0, 1.0))
 	if k > 0.0:
 		var dir := (global_position - from_pos).normalized()
@@ -325,11 +311,14 @@ func take_damage(amount: int, from_pos: Vector2 = Vector2.ZERO, knock: float = 0
 func _on_hurt_finished() -> void:
 	hurt_lock = false
 
-# --- NEW: death flow separated so we can await anim then free ---
+# --- NEW: death flow (emit 'died' once, then anim, then free) ---
 func _die() -> void:
 	if is_dead:
 		return
 	is_dead = true
+
+	emit_signal("died")   # ← THIS is what EnemyManager listens for
+
 	velocity = Vector2.ZERO
 	agent.target_position = global_position
 	if attack_hitbox:
@@ -346,7 +335,6 @@ func _on_dead_anim_finished() -> void:
 # ---------------------------------------------------------------
 
 func die() -> void:
-	# kept for compatibility if you call die() elsewhere; forwards to _die()
 	_die()
 
 func _play(anim: String) -> void:
@@ -379,17 +367,14 @@ func _play(anim: String) -> void:
 
 func on_player_respawned(p: Node2D) -> void:
 	player = p
-	is_attacking = false                 # prevent being stuck in attack lock
+	is_attacking = false
 	hurt_lock = false
 	if attack_hitbox:
 		attack_hitbox.monitoring = false
 		attack_hitbox.set_meta("active", false)
-
-	# Don’t force aggro=false here; let the checks decide correctly.
 	_repath_accum = 0.0
 	agent.target_position = p.global_position
-
-	_force_aggro_check()                 # if you respawn inside the zone, this re-arms aggro
+	_force_aggro_check()
 
 func _force_aggro_check() -> void:
 	_try_get_player()
@@ -402,14 +387,12 @@ func _force_aggro_check() -> void:
 				print("[CZ] force aggro via overlap")
 			aggro = true
 			return
-	# distance fallback
 	var wake_dist := stop_distance * 3.0
 	if global_position.distance_to(player.global_position) <= wake_dist:
 		if not aggro:
 			print("[CZ] force aggro via distance")
 		aggro = true
 
-# --- NEW: tiny helper for optional HealthBar ---
 func _update_health_bar() -> void:
 	if not is_instance_valid(health_bar):
 		return
@@ -417,4 +400,3 @@ func _update_health_bar() -> void:
 		health_bar.max_value = max_health
 	if "value" in health_bar:
 		health_bar.value = health
-#penis

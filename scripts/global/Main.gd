@@ -3,10 +3,11 @@ extends Node2D
 
 @onready var level_root: Node = $level_root
 @onready var ui: CanvasLayer = $ui
-@onready var elevator_keypad_ui: ElevatorKeypadUI = $ui/KeypadUI   # <-- typed keypad node (must have KeypadUI.gd attached)
+@onready var elevator_keypad_ui: ElevatorKeypadUI = $ui/KeypadUI   # KeypadUI.gd must be attached
 
 # Assign your player PackedScene (e.g., elevatorhero_2.tscn) in the Inspector
 @export var player_scene: PackedScene
+@export var lives_per_floor: int = 3    # ← tweak here (2 or 3 etc.)
 
 var player: Node2D
 var current_level: Node
@@ -22,14 +23,14 @@ const MENU_SCENE := "res://scenes/mainmenu.tscn"   # <-- your real menu .tscn
 const LEVELS: Dictionary = {
 	"playground": "res://scenes/playground.tscn",   # <-- your real level paths
 	"elevator":   "res://griffin/scenes/elevator.tscn",
-	"floor2":     "res://scenes/floor2.tscn"
+	"floor2":     "res://scenes/floor2.tscn",       # <-- add more floors as you build them
 }
 const DEFAULT_START_LEVEL := "playground"
 const DEFAULT_START_SPAWN := "SpawnPoint"
 # ----------------------------------
 
 func _enter_tree() -> void:
-	# Make sure Door.gd can find this node via the 'level_manager' group
+	# Let Door.gd find this via group
 	add_to_group("level_manager")
 
 func _ready() -> void:
@@ -37,9 +38,9 @@ func _ready() -> void:
 
 # ===================== MENU FLOW =====================
 func _show_main_menu() -> void:
-	RunState.clear_all()   # ← reset killed enemies for a fresh run
-	_unload_level()
-	# ...rest of your code...
+	# Fresh run: wipe deaths & lives
+	if Engine.has_singleton("RunState") or true:
+		RunState.reset_run()
 
 	_unload_level()
 
@@ -84,6 +85,9 @@ func _on_start_game(level_id: String) -> void:
 	if not LEVELS.has(level_id):
 		level_id = DEFAULT_START_LEVEL
 
+	# Fresh run: clear saved floor unlocks
+	GameProgress.reset_progress()
+
 	# Remove menu & reveal UI
 	if menu_ref and is_instance_valid(menu_ref):
 		menu_ref.queue_free()
@@ -95,7 +99,11 @@ func _on_start_game(level_id: String) -> void:
 	if ui:
 		ui.visible = true
 
-	# Seed the initial checkpoint so deaths respawn correctly
+	# Init lives config for the run (safe to keep)
+	RunState.set_default_lives_per_floor(lives_per_floor)
+	RunState.ensure_lives(level_id, lives_per_floor)
+
+	# Seed checkpoint & load
 	set_checkpoint(level_id, DEFAULT_START_SPAWN)
 	load_level(level_id, DEFAULT_START_SPAWN)
 
@@ -121,15 +129,21 @@ func load_level(level_key: String, spawn_name: String = "SpawnPoint") -> void:
 	level_root.add_child(current_level)
 	current_level_key = level_key
 
+	# Expose key to children that care (e.g., EnemyManager auto-fill)
+	current_level.set_meta("level_key", current_level_key)
+
+	# Ensure lives for this floor are initialized on first entry
+	RunState.ensure_lives(current_level_key, lives_per_floor)
+
 	_ensure_player()
 	_position_player_at_spawn(spawn_name)
 
 	# If we don't have a checkpoint yet, set it to this entry
-	if String(checkpoint.level) == "":
+	if String(checkpoint["level"]) == "":
 		set_checkpoint(level_key, spawn_name)
 
 	# Optional broadcast to listeners (enemies/HUD)
-	get_tree().call_group("enemies", "on_player_respawned", player)
+	_notify_enemies_player_ready()
 
 func _unload_level() -> void:
 	if current_level and is_instance_valid(current_level):
@@ -186,33 +200,52 @@ func _position_player_at_spawn(spawn_name: String) -> void:
 		push_warning("[Main] spawn not found: '%s' (and no 'SpawnPoint' fallback)" % spawn_name)
 
 func set_checkpoint(level_key: String, spawn_name: String) -> void:
-	checkpoint.level = level_key
-	checkpoint.spawn = spawn_name
+	checkpoint["level"] = level_key
+	checkpoint["spawn"] = spawn_name
 
+# ================ DEATH / RESPAWN WITH LIVES ================
 func respawn_player() -> void:
 	get_tree().paused = false
 
-	# Seed a default if none yet
-	if String(checkpoint.level) == "":
+	var lvl_key: String = current_level_key
+	if lvl_key == "":
+		lvl_key = String(checkpoint["level"])
+
+	RunState.ensure_lives(lvl_key, lives_per_floor)
+	var remaining: int = RunState.consume_life(lvl_key)
+	print("[Lives] Floor '%s' remaining: %d" % [lvl_key, remaining])
+
+	if remaining <= 0:
+		_show_main_menu()
+		return
+
+	if String(checkpoint["level"]) == "":
 		set_checkpoint(DEFAULT_START_LEVEL, DEFAULT_START_SPAWN)
 
-	# Reload level if needed, else just reposition
-	if current_level_key != String(checkpoint.level):
-		load_level(String(checkpoint.level), String(checkpoint.spawn))
+	if current_level_key != String(checkpoint["level"]):
+		load_level(String(checkpoint["level"]), String(checkpoint["spawn"]))
 	else:
-		_position_player_at_spawn(String(checkpoint.spawn))
-		get_tree().call_group("enemies", "on_player_respawned", player)
+		_position_player_at_spawn(String(checkpoint["spawn"]))
+		_notify_enemies_player_ready()
 
-	# IMPORTANT: restore player state (unlocks controls, resets i-frames/anim, etc.)
 	if player:
 		if player.has_method("_respawn"):
-			player.call("_respawn")  # uses your existing method
+			player.call("_respawn")
 		else:
-			# Fallback in case _respawn() is renamed/removed
 			if player.has_variable("max_health"): player.health = player.max_health
 			if player.has_variable("respawn_i_frames"): player.i_frames = player.respawn_i_frames
 			if player.has_variable("controls_locked"): player.controls_locked = false
 			if player.has_variable("attacking"): player.attacking = false
+
+# Let enemies know the player node exists (safe & deferred).
+func _notify_enemies_player_ready() -> void:
+	if player and is_instance_valid(player):
+		# Defer the broadcast so enemies that just entered the tree can receive it.
+		call_deferred("_broadcast_player_ready")
+
+func _broadcast_player_ready() -> void:
+	if player and is_instance_valid(player):
+		get_tree().call_group("enemies", "on_player_respawned", player)
 
 # ================== ELEVATOR KEYPAD GLUE ==================
 func open_keypad() -> void:
@@ -235,9 +268,24 @@ func _on_keypad_closed() -> void:
 	_unlock_controls()
 
 func _on_keypad_floor_selected(level_key: String) -> void:
-	if level_key != current_level_key:
-		# Use your spawn node name for arriving via elevator
-		load_level(level_key, "PlaygroundSpawn")
+	# No-op if already here
+	if level_key == current_level_key:
+		_unlock_controls()
+		return
+
+	# HARD GATE: refuse locked floors
+	if not GameProgress.is_floor_unlocked_by_key(level_key):
+		push_warning("[Main] Floor '%s' is locked; ignoring selection." % level_key)
+		_unlock_controls()
+		return
+
+	# Safety: only load known keys
+	if not LEVELS.has(level_key):
+		push_warning("[Main] Key '%s' not in LEVELS; ignoring." % level_key)
+		_unlock_controls()
+		return
+
+	load_level(level_key, "SpawnPoint")
 	_unlock_controls()
 
 func _unlock_controls() -> void:

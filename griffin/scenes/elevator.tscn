@@ -6270,6 +6270,7 @@ position = Vector2(217, 124)
 [node name="ElevatorInterior" type="Area2D" parent="."]
 position = Vector2(148, 135)
 script = ExtResource("2_sos3q")
+target_spawn_name = ""
 door_action = "open_keypad"
 interior_area_path = NodePath(".")
 
